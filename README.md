@@ -104,8 +104,6 @@ When deploying to a production environment, make sure to set the following envir
 - `VITE_GITHUB_TOKEN`: Your GitHub personal access token
 - `VITE_CODEGEN_TOKEN`: Your Codegen API token
 - `VITE_CODEGEN_ORG_ID`: Your Codegen organization ID
-- `VITE_API_BASE_URL`: The Codegen API base URL (default: https://api.codegen.com)
-- `VITE_GITHUB_API_URL`: The GitHub API URL (default: https://api.github.com)
 
 ## Testing
 

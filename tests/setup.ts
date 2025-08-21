@@ -1,9 +1,9 @@
 import { expect, afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
-import matchers from '@testing-library/jest-dom/matchers';
+import * as matchers from '@testing-library/jest-dom/matchers';
 
 // Extend Vitest's expect with Testing Library matchers
-expect.extend(matchers);
+expect.extend(matchers as any);
 
 // Mock environment variables
 vi.stubGlobal('import.meta', {
@@ -42,4 +42,3 @@ const localStorageMock = (() => {
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
 });
-

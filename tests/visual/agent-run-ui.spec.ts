@@ -1,76 +1,86 @@
 import { test, expect } from '@playwright/test';
 
-// Mock data setup
+// Mock data
 const mockAgentRun = {
   id: 'test-run-id',
   status: 'completed',
-  prompt: 'Fix the login component',
-  createdAt: '2025-08-20T12:00:00Z',
-  updatedAt: '2025-08-20T12:05:00Z'
+  prompt: 'Create a new feature',
+  createdAt: '2023-01-01T00:00:00Z',
+  updatedAt: '2023-01-01T01:00:00Z'
 };
 
+// Mock API responses
 test.beforeEach(async ({ page }) => {
-  // Mock API responses
-  await page.route('**/api/agent-runs/**', async (route) => {
-    await route.fulfill({
+  // Mock getAgentRun API
+  await page.route('**/api/agent-runs/*', (route) => {
+    route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify(mockAgentRun)
     });
   });
   
-  // Set environment variables
-  await page.addInitScript(() => {
-    window.env = {
-      VITE_CODEGEN_TOKEN: 'mock-codegen-token',
-      VITE_CODEGEN_ORG_ID: '123',
-      VITE_GITHUB_TOKEN: 'mock-github-token'
-    };
+  // Mock resumeAgentRun API
+  await page.route('**/api/agent-runs/*/resume', (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ...mockAgentRun,
+        status: 'running'
+      })
+    });
   });
 });
 
 test('Agent run detail view renders correctly', async ({ page }) => {
-  // Navigate to agent run details page
-  await page.goto('/agents/runs/test-run-id');
+  // Navigate to the agent run detail page
+  await page.goto('/agent-runs/test-run-id');
   
-  // Wait for content to load
-  await page.waitForSelector('h1:has-text("Agent Run Details")');
+  // Wait for the page to load
+  await page.waitForSelector('.agent-run-detail');
   
-  // Take screenshot for visual comparison
-  await page.screenshot({ path: 'snapshots/agent-run-detail.png' });
+  // Take a screenshot for visual comparison
+  await expect(page).toHaveScreenshot('agent-run-detail.png');
 });
 
 test('Resume dialog renders correctly', async ({ page }) => {
-  // Navigate to agent run details page
-  await page.goto('/agents/runs/test-run-id');
+  // Navigate to the agent run detail page
+  await page.goto('/agent-runs/test-run-id');
   
-  // Click resume button
-  await page.click('button:has-text("Resume")');
+  // Wait for the page to load
+  await page.waitForSelector('.agent-run-detail');
   
-  // Wait for dialog to appear
-  await page.waitForSelector('dialog');
+  // Click the resume button
+  await page.click('.resume-button');
   
-  // Take screenshot for visual comparison
-  await page.screenshot({ path: 'snapshots/resume-dialog.png' });
+  // Wait for the dialog to appear
+  await page.waitForSelector('.resume-dialog');
+  
+  // Take a screenshot for visual comparison
+  await expect(page).toHaveScreenshot('resume-dialog.png');
 });
 
 test('Form validation displays errors correctly', async ({ page }) => {
-  // Navigate to agent run details page
-  await page.goto('/agents/runs/test-run-id');
+  // Navigate to the agent run detail page
+  await page.goto('/agent-runs/test-run-id');
   
-  // Click resume button
-  await page.click('button:has-text("Resume")');
+  // Wait for the page to load
+  await page.waitForSelector('.agent-run-detail');
   
-  // Wait for dialog to appear
-  await page.waitForSelector('dialog');
+  // Click the resume button
+  await page.click('.resume-button');
   
-  // Submit without filling form
-  await page.click('button:has-text("Submit")');
+  // Wait for the dialog to appear
+  await page.waitForSelector('.resume-dialog');
   
-  // Wait for error message
+  // Submit the form without entering a prompt
+  await page.click('.dialog-actions button[type="submit"]');
+  
+  // Wait for the error message to appear
   await page.waitForSelector('.error-message');
   
-  // Take screenshot for visual comparison
-  await page.screenshot({ path: 'snapshots/form-validation-errors.png' });
+  // Take a screenshot for visual comparison
+  await expect(page).toHaveScreenshot('form-validation-errors.png');
 });
 
