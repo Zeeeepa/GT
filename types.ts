@@ -301,6 +301,10 @@ export enum AgentRunStatus {
   FAILED = "FAILED",
   PAUSED = "PAUSED",
   PENDING = "PENDING",
+  RUNNING = "RUNNING",
+  PROCESSING = "PROCESSING",
+  INITIALIZING = "INITIALIZING",
+  RESUMED = "RESUMED",
 }
 
 // Local Cache Types

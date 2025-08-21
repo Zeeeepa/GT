@@ -149,9 +149,31 @@ export const ResumeAgentRunDialog: React.FC<ResumeAgentRunDialogProps> = ({
     try {
       // Prepare metadata with repository context if selected
       const metadata: Record<string, any> = {};
+      
+      // Add repository context if selected
       if (selectedRepository) {
         metadata.repository_id = selectedRepository.id;
         metadata.repository_name = selectedRepository.name;
+        metadata.repository_full_name = selectedRepository.full_name;
+        
+        // Add additional repository metadata if available
+        if (selectedRepository.language) {
+          metadata.repository_language = selectedRepository.language;
+        }
+        if (selectedRepository.default_branch) {
+          metadata.repository_default_branch = selectedRepository.default_branch;
+        }
+      }
+      
+      // Add parent run reference
+      metadata.parent_run_id = agentRunId;
+      
+      // Add timestamp for tracking
+      metadata.resumed_at = new Date().toISOString();
+      
+      // Add image count if images are present
+      if (images.length > 0) {
+        metadata.image_count = images.length;
       }
       
       await apiClient.resumeAgentRun(organizationId.toString(), agentRunId, { 
@@ -163,7 +185,8 @@ export const ResumeAgentRunDialog: React.FC<ResumeAgentRunDialogProps> = ({
       await onResumed();
       onClose();
     } catch (error) {
-      // API client will show a toast on error
+      console.error("Error resuming agent run:", error);
+      toast.error("Failed to resume agent run. Please try again.");
     } finally {
       setIsResuming(false);
     }

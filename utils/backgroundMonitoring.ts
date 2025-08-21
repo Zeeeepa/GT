@@ -8,6 +8,8 @@ export enum MonitoringEventType {
   RUN_COMPLETED = 'run_completed',
   RUN_FAILED = 'run_failed',
   RUN_PAUSED = 'run_paused',
+  RUN_RESUMED = 'run_resumed',
+  RUN_CREATED = 'run_created',
   ERROR = 'error',
 }
 
@@ -243,6 +245,7 @@ class BackgroundMonitoringService {
       
       // Check if status has changed
       const statusChanged = runInfo.status !== updatedRun.status;
+      const previousStatus = runInfo.status;
       runInfo.status = updatedRun.status;
       
       // Update the cache
@@ -260,7 +263,20 @@ class BackgroundMonitoringService {
           this.emitEvent(MonitoringEventType.RUN_FAILED, updatedRun);
         } else if (updatedRun.status.toLowerCase() === AgentRunStatus.PAUSED.toLowerCase()) {
           this.emitEvent(MonitoringEventType.RUN_PAUSED, updatedRun);
+        } else if (updatedRun.status.toLowerCase() === AgentRunStatus.ACTIVE.toLowerCase() && 
+                  previousStatus.toLowerCase() === AgentRunStatus.PAUSED.toLowerCase()) {
+          // Detect resumed runs (transition from PAUSED to ACTIVE)
+          this.emitEvent(MonitoringEventType.RUN_RESUMED, updatedRun);
         }
+      }
+      
+      // Check for parent-child relationships (resumed runs)
+      if (updatedRun.parent_run_id) {
+        // This is a resumed run, emit event with parent info
+        this.emitEvent(MonitoringEventType.RUN_RESUMED, {
+          ...updatedRun,
+          parentRunId: updatedRun.parent_run_id
+        });
       }
       
       // Stop tracking completed or failed runs after emitting events
@@ -299,7 +315,10 @@ class BackgroundMonitoringService {
     const activeStatuses = [
       AgentRunStatus.ACTIVE.toLowerCase(),
       AgentRunStatus.PENDING.toLowerCase(),
-      AgentRunStatus.EVALUATION.toLowerCase()
+      AgentRunStatus.EVALUATION.toLowerCase(),
+      'running', // Additional status that might be returned by the API
+      'processing', // Additional status that might be returned by the API
+      'initializing' // Additional status that might be returned by the API
     ];
     return activeStatuses.includes(status.toLowerCase());
   }
