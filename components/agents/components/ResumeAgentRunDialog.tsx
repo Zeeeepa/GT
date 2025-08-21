@@ -1,7 +1,9 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { getAPIClient } from '../../../services/codegenApiService';
-import { Play, Upload, X, Image } from 'lucide-react';
+import { getRepositoryApiService } from '../../../services/repositoryApiService';
+import { Play, Upload, X, Image, Code, ChevronDown, ChevronUp } from 'lucide-react';
+import { CodegenRepository } from '../../../types';
 
 interface ResumeAgentRunDialogProps {
   isOpen: boolean;
@@ -9,15 +11,79 @@ interface ResumeAgentRunDialogProps {
   agentRunId: number;
   organizationId: number;
   onResumed: () => Promise<void>;
+  initialRepositoryId?: number;
 }
 
-export const ResumeAgentRunDialog: React.FC<ResumeAgentRunDialogProps> = ({ isOpen, onClose, agentRunId, organizationId, onResumed }) => {
+export const ResumeAgentRunDialog: React.FC<ResumeAgentRunDialogProps> = ({ 
+  isOpen, 
+  onClose, 
+  agentRunId, 
+  organizationId, 
+  onResumed,
+  initialRepositoryId
+}) => {
   const [prompt, setPrompt] = useState('');
   const [isResuming, setIsResuming] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [showRepositorySelector, setShowRepositorySelector] = useState(false);
+  const [repositories, setRepositories] = useState<CodegenRepository[]>([]);
+  const [selectedRepository, setSelectedRepository] = useState<CodegenRepository | null>(null);
+  const [isLoadingRepositories, setIsLoadingRepositories] = useState(false);
+  const [repositorySearchText, setRepositorySearchText] = useState('');
+  const [filteredRepositories, setFilteredRepositories] = useState<CodegenRepository[]>([]);
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
   const apiClient = getAPIClient();
+  const repositoryService = getRepositoryApiService();
+  
+  // Load repositories and set initial repository if provided
+  useEffect(() => {
+    if (isOpen) {
+      loadRepositories();
+    }
+  }, [isOpen, organizationId]);
+  
+  // Load initial repository if provided
+  useEffect(() => {
+    if (initialRepositoryId && repositories.length > 0) {
+      const repo = repositories.find(r => r.id === initialRepositoryId);
+      if (repo) {
+        setSelectedRepository(repo);
+      }
+    }
+  }, [initialRepositoryId, repositories]);
+  
+  // Filter repositories based on search text
+  useEffect(() => {
+    if (!repositorySearchText) {
+      setFilteredRepositories(repositories);
+      return;
+    }
+    
+    const normalizedSearchText = repositorySearchText.toLowerCase();
+    const filtered = repositories.filter(repo => 
+      repo.name.toLowerCase().includes(normalizedSearchText) || 
+      (repo.description && repo.description.toLowerCase().includes(normalizedSearchText))
+    );
+    
+    setFilteredRepositories(filtered);
+  }, [repositorySearchText, repositories]);
+  
+  // Load repositories
+  const loadRepositories = async () => {
+    setIsLoadingRepositories(true);
+    try {
+      const repos = await repositoryService.getRepositories(organizationId.toString());
+      setRepositories(repos);
+      setFilteredRepositories(repos);
+    } catch (error) {
+      console.error("Error loading repositories:", error);
+      toast.error("Failed to load repositories.");
+    } finally {
+      setIsLoadingRepositories(false);
+    }
+  };
 
   const handleImageUpload = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -81,9 +147,17 @@ export const ResumeAgentRunDialog: React.FC<ResumeAgentRunDialogProps> = ({ isOp
     }
     setIsResuming(true);
     try {
+      // Prepare metadata with repository context if selected
+      const metadata: Record<string, any> = {};
+      if (selectedRepository) {
+        metadata.repository_id = selectedRepository.id;
+        metadata.repository_name = selectedRepository.name;
+      }
+      
       await apiClient.resumeAgentRun(organizationId.toString(), agentRunId, { 
         prompt,
-        images: images.length > 0 ? images : undefined
+        images: images.length > 0 ? images : undefined,
+        metadata: Object.keys(metadata).length > 0 ? metadata : undefined
       });
       toast.success(`Agent run #${agentRunId} resumed successfully.`);
       await onResumed();
@@ -110,6 +184,94 @@ export const ResumeAgentRunDialog: React.FC<ResumeAgentRunDialogProps> = ({ isOp
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
           />
+          
+          {/* Repository Context Section */}
+          <div className="mt-4">
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-sm font-medium text-text-primary">Repository Context (Optional)</label>
+              <button
+                type="button"
+                onClick={() => setShowRepositorySelector(!showRepositorySelector)}
+                className="text-xs px-2 py-1 bg-primary border border-border-color rounded-md hover:bg-tertiary flex items-center gap-1"
+              >
+                <Code className="w-3 h-3" />
+                {showRepositorySelector ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                {selectedRepository ? 'Change' : 'Select'} Repository
+              </button>
+            </div>
+            
+            {selectedRepository && !showRepositorySelector && (
+              <div className="flex items-center gap-2 p-2 bg-primary border border-border-color rounded-md">
+                <Code className="w-4 h-4 text-accent" />
+                <span className="text-sm font-medium">{selectedRepository.name}</span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedRepository(null)}
+                  className="ml-auto text-danger hover:text-danger-hover"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+            
+            {showRepositorySelector && (
+              <div className="mt-2 border border-border-color rounded-md overflow-hidden">
+                <div className="p-2 bg-tertiary">
+                  <input
+                    type="text"
+                    placeholder="Search repositories..."
+                    value={repositorySearchText}
+                    onChange={(e) => setRepositorySearchText(e.target.value)}
+                    className="w-full p-1 text-sm bg-primary border border-border-color rounded-md"
+                  />
+                </div>
+                <div className="max-h-40 overflow-y-auto">
+                  {isLoadingRepositories ? (
+                    <div className="p-4 text-center text-text-secondary">Loading repositories...</div>
+                  ) : filteredRepositories.length === 0 ? (
+                    <div className="p-4 text-center text-text-secondary">No repositories found</div>
+                  ) : (
+                    filteredRepositories.map(repo => (
+                      <div
+                        key={repo.id}
+                        onClick={() => {
+                          setSelectedRepository(repo);
+                          setShowRepositorySelector(false);
+                        }}
+                        className={`p-2 cursor-pointer hover:bg-tertiary flex items-center gap-2 ${
+                          selectedRepository?.id === repo.id ? 'bg-tertiary' : ''
+                        }`}
+                      >
+                        <Code className="w-4 h-4 text-accent" />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium truncate">{repo.name}</div>
+                          {repo.description && (
+                            <div className="text-xs text-text-secondary truncate">{repo.description}</div>
+                          )}
+                        </div>
+                        {selectedRepository?.id === repo.id && (
+                          <div className="text-accent">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
+                <div className="p-2 bg-tertiary border-t border-border-color flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setShowRepositorySelector(false)}
+                    className="text-xs px-2 py-1 bg-primary border border-border-color rounded-md hover:bg-secondary"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
           
           {/* Image Upload Section */}
           <div className="mt-4">

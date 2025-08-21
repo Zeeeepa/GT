@@ -1,5 +1,3 @@
-
-
 // --- Project Catalog Types ---
 
 export interface ProjectRepository {
@@ -185,6 +183,25 @@ export interface AgentRunStep {
   description: string;
   status: 'completed' | 'failed' | 'running' | 'pending';
   timestamp: string;
+  details?: string;
+  logs?: string[];
+  duration?: number; // in milliseconds
+  error?: string;
+}
+
+// Repository type for project context
+export interface CodegenRepository {
+  id: number;
+  name: string;
+  full_name?: string;
+  description?: string;
+  url?: string;
+  html_url?: string;
+  language?: string;
+  default_branch?: string;
+  created_at?: string;
+  updated_at?: string;
+  visibility?: 'public' | 'private' | 'internal';
 }
 
 // API Response Types based on Codegen API
@@ -198,6 +215,20 @@ export interface AgentRunResponse {
   prompt?: string;
   summary?: string;
   steps?: AgentRunStep[];
+  repository_id?: number;
+  repository?: CodegenRepository;
+  parent_run_id?: number; // For resumed runs
+  metadata?: {
+    repository_id?: number;
+    repository_name?: string;
+    [key: string]: any;
+  };
+  github_pull_requests?: {
+    id: number;
+    title: string;
+    url: string;
+    created_at: string;
+  }[];
 }
 
 export interface UserResponse {
@@ -337,4 +368,12 @@ export interface TrackedAgentRun {
   createdAt: string;
   webUrl: string;
   addedAt: string; // When it was added to tracking
+}
+
+// API Request Types
+export interface ResumeAgentRunRequest {
+  agent_run_id: number;
+  prompt: string;
+  images?: string[];
+  metadata?: Record<string, any>;
 }

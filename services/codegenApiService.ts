@@ -134,7 +134,15 @@ class CodegenAPIClient {
     );
   }
 
-  async resumeAgentRun(organizationId: string, agentRunId: number, request: { prompt: string }): Promise<AgentRunResponse> {
+  async resumeAgentRun(
+    organizationId: string, 
+    agentRunId: number, 
+    request: { 
+      prompt: string; 
+      images?: string[];
+      metadata?: Record<string, any>;
+    }
+  ): Promise<AgentRunResponse> {
     const fullRequest: ResumeAgentRunRequest = {
         ...request,
         agent_run_id: agentRunId

@@ -1,4 +1,4 @@
-import { AgentRunResponse, OrganizationResponse, UserResponse, TrackedAgentRun } from "../types";
+import { AgentRunResponse, OrganizationResponse, UserResponse, TrackedAgentRun, CodegenRepository } from "../types";
 
 // Cache Keys
 export const CACHE_KEYS = {
@@ -7,6 +7,8 @@ export const CACHE_KEYS = {
   USERS: "users",
   METADATA: "metadata",
   TRACKED_RUNS: "tracked-runs",
+  REPOSITORIES: "repositories",
+  REPO_METADATA: "repo-metadata",
 } as const;
 
 // Cache Namespaces
@@ -14,6 +16,7 @@ export const CACHE_NAMESPACES = {
   AGENT_RUNS: "agent-runs",
   ORGANIZATIONS: "organizations",
   USERS: "users",
+  REPOSITORIES: "repositories",
 } as const;
 
 // Cache Entry Types
