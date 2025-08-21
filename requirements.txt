@@ -1,0 +1,15 @@
+# NPM Scraper Dependencies
+requests>=2.28.0
+beautifulsoup4>=4.11.0
+lxml>=4.9.0
+urllib3>=1.26.0
+
+# Optional: For enhanced parsing
+html5lib>=1.1
+cssselect>=1.1.0
+
+# For concurrent processing (built-in in Python 3.2+)
+# concurrent.futures - included in standard library
+
+# For data handling
+dataclasses>=0.6  # For Python < 3.7 compatibility

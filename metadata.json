@@ -1,0 +1,6 @@
+{
+  "name": "GitHub agent Catalog",
+  "description": "An application for cataloging, organizing, and managing your GitHub projects. Easily view project details, create custom groups, and delete repositories with confirmation.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
