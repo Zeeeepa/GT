@@ -6,7 +6,7 @@
 import { LocalStorage } from '../utils/storage';
 
 // GitHub API Constants
-const GITHUB_API_URL = import.meta.env.VITE_GITHUB_API_URL || 'https://api.github.com';
+const GITHUB_API_URL = 'https://api.github.com';
 
 /**
  * GitHub API Client

@@ -15,7 +15,7 @@ import { clearStoredUserInfo } from '../storage/userStorage';
 
 // --- API Constants ---
 
-const DEFAULT_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api/codegen";
+const DEFAULT_API_BASE_URL = "https://api.codegen.com";
 
 const API_ENDPOINTS = {
   // User endpoints

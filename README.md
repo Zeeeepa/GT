@@ -85,6 +85,28 @@ npm run preview
 
 The production build will be available at http://localhost:4173.
 
+### Testing
+
+The application includes comprehensive UI component tests using Vitest and React Testing Library. These tests validate that the components work correctly through their user interfaces.
+
+Run the tests:
+
+```bash
+npm run test
+```
+
+Run tests in watch mode during development:
+
+```bash
+npm run test:watch
+```
+
+Generate test coverage report:
+
+```bash
+npm run test:coverage
+```
+
 ## Deployment
 
 ### Deploying to a Static Hosting Service
