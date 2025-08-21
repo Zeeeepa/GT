@@ -17,8 +17,14 @@ export interface CredentialsValidationResult {
 }
 
 export async function getCredentials(): Promise<Preferences> {
-    const apiToken = await LocalStorage.getItem<string>("codegenToken") || '';
-    const defaultOrganization = await LocalStorage.getItem<string>("codegenOrgId") || undefined;
+    // First try to get from environment variables
+    const envApiToken = import.meta.env.VITE_CODEGEN_TOKEN;
+    const envOrgId = import.meta.env.VITE_CODEGEN_ORG_ID;
+    
+    // Fall back to localStorage if environment variables are not set
+    const apiToken = envApiToken || await LocalStorage.getItem<string>("codegenToken") || '';
+    const defaultOrganization = envOrgId || await LocalStorage.getItem<string>("codegenOrgId") || undefined;
+    
     return { apiToken, defaultOrganization };
 }
 
