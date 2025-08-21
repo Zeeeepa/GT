@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { ProjectList } from '../types';
 import HueSlider from './shared/HueSlider';
@@ -127,7 +126,7 @@ const ManageListsModal: React.FC<ManageListsModalProps> = ({ isOpen, onClose, li
         }
     };
 
-    const ListItem = ({ list }: { list: ProjectList }) => {
+    const ListItem = ({ list, key }: { list: ProjectList, key?: string }) => {
         const isEditing = editingListId === list.id;
         const listColor = list.color || `hsl(210, ${SATURATION}%, ${LIGHTNESS}%)`;
 

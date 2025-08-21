@@ -107,6 +107,56 @@ When deploying to a production environment, make sure to set the following envir
 - `VITE_API_BASE_URL`: The Codegen API base URL (default: https://api.codegen.com)
 - `VITE_GITHUB_API_URL`: The GitHub API URL (default: https://api.github.com)
 
+## Testing
+
+The application includes comprehensive testing infrastructure to ensure code quality and prevent regressions.
+
+### Running Tests
+
+Run all component tests:
+
+```bash
+npm run test
+```
+
+Run tests in watch mode during development:
+
+```bash
+npm run test:watch
+```
+
+View test coverage report:
+
+```bash
+npm run test:coverage
+```
+
+Run integration tests:
+
+```bash
+npm run test:integration
+```
+
+Run visual regression tests:
+
+```bash
+npm run test:visual
+```
+
+### Test Structure
+
+- **Component Tests**: Located in `tests/components/` directory, these test individual UI components in isolation.
+- **Integration Tests**: Located in `tests/integration/` directory, these test the interaction between components and services.
+- **Visual Regression Tests**: Located in `tests/visual/` directory, these capture screenshots of components and compare them against baseline images to detect visual changes.
+
+### Continuous Integration
+
+The repository includes GitHub Actions workflows for automated testing:
+
+- **UI Component Tests**: Runs component tests on every PR and push to main branch.
+- **Integration Tests**: Validates API integration with actual prompt templates.
+- **Visual Regression Tests**: Detects visual changes in the UI and requires approval for intentional changes.
+
 ## API Documentation
 
 The application uses the Codegen API for agent management. For more information, see the [API documentation](https://docs.codegen.com/api-reference/agents/resume-agent-run).
