@@ -15,7 +15,7 @@ import { clearStoredUserInfo } from '../storage/userStorage';
 
 // --- API Constants ---
 
-const DEFAULT_API_BASE_URL = "/api/codegen";
+const DEFAULT_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api/codegen";
 
 const API_ENDPOINTS = {
   // User endpoints
@@ -134,7 +134,15 @@ class CodegenAPIClient {
     );
   }
 
-  async resumeAgentRun(organizationId: string, agentRunId: number, request: { prompt: string }): Promise<AgentRunResponse> {
+  async resumeAgentRun(
+    organizationId: string, 
+    agentRunId: number, 
+    request: { 
+      prompt: string; 
+      images?: string[];
+      metadata?: Record<string, any>;
+    }
+  ): Promise<AgentRunResponse> {
     const fullRequest: ResumeAgentRunRequest = {
         ...request,
         agent_run_id: agentRunId
