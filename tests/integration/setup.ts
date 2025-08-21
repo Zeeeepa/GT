@@ -1,11 +1,10 @@
 import { vi } from 'vitest';
 
-// Mock environment variables
+// Use environment variables (placeholders for security)
 vi.stubGlobal('import.meta', {
   env: {
-    VITE_GITHUB_TOKEN: 'mock-github-token',
-    VITE_CODEGEN_TOKEN: 'mock-codegen-token',
-    VITE_CODEGEN_ORG_ID: 'mock-org-id'
+    VITE_GITHUB_TOKEN: 'github_pat_PLACEHOLDER_TOKEN',
+    VITE_CODEGEN_TOKEN: 'sk-PLACEHOLDER_TOKEN',
+    VITE_CODEGEN_ORG_ID: '323'
   }
 });
-

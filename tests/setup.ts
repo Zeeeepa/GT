@@ -5,12 +5,12 @@ import * as matchers from '@testing-library/jest-dom/matchers';
 // Extend Vitest's expect with Testing Library matchers
 expect.extend(matchers as any);
 
-// Mock environment variables
+// Use environment variables (placeholders for security)
 vi.stubGlobal('import.meta', {
   env: {
-    VITE_CODEGEN_TOKEN: 'mock-codegen-token',
-    VITE_CODEGEN_ORG_ID: '123',
-    VITE_GITHUB_TOKEN: 'mock-github-token',
+    VITE_GITHUB_TOKEN: 'github_pat_PLACEHOLDER_TOKEN',
+    VITE_CODEGEN_TOKEN: 'sk-PLACEHOLDER_TOKEN',
+    VITE_CODEGEN_ORG_ID: '323',
   },
 });
 
