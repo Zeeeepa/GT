@@ -14,7 +14,9 @@
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:e2e": "playwright test",
     "test:visual": "playwright test --config playwright-visual.config.ts",
-    "test:visual-compare": "node scripts/compare-visual-snapshots.js"
+    "test:visual-component": "playwright test --config playwright-component.config.ts",
+    "test:visual-compare": "node scripts/compare-visual-snapshots.js",
+    "manage-baselines": "tsx scripts/manage-baselines.ts"
   },
   "dependencies": {
     "@google/genai": "^1.12.0",
@@ -32,7 +34,7 @@
     "@vitejs/plugin-react": "^5.0.1",
     "@vitest/coverage-v8": "^1.3.1",
     "@vitest/ui": "^1.3.1",
-    "jsdom": "^24.0.0",
+    "jsdom": "^24.1.3",
     "msw": "^2.10.5",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
