@@ -1,7 +1,21 @@
 import React, { useState } from 'react';
-import { List, Icon } from '@raycast/api';
+import { List, Icon } from '../../../mocks/raycast-api';
 import { AgentRunStep } from '../../../types';
-import { formatDistanceToNow } from 'date-fns';
+// Using the same date formatter as in AgentRunDetailView
+const formatDistanceToNow = (date: Date | string) => {
+  const now = new Date();
+  const then = typeof date === 'string' ? new Date(date) : date;
+  const diffMs = now.getTime() - then.getTime();
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHour = Math.floor(diffMin / 60);
+  const diffDay = Math.floor(diffHour / 24);
+  
+  if (diffDay > 0) return `${diffDay} day${diffDay > 1 ? 's' : ''} ago`;
+  if (diffHour > 0) return `${diffHour} hour${diffHour > 1 ? 's' : ''} ago`;
+  if (diffMin > 0) return `${diffMin} minute${diffMin > 1 ? 's' : ''} ago`;
+  return 'just now';
+};
 
 interface AgentRunStepListProps {
   steps: AgentRunStep[];

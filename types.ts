@@ -193,15 +193,15 @@ export interface AgentRunStep {
 export interface CodegenRepository {
   id: number;
   name: string;
-  full_name?: string;
-  description?: string;
-  url?: string;
-  html_url?: string;
-  language?: string;
-  default_branch?: string;
-  created_at?: string;
-  updated_at?: string;
-  visibility?: 'public' | 'private' | 'internal';
+  full_name: string;
+  description: string | null;
+  url: string;
+  html_url: string;
+  language: string | null;
+  default_branch: string;
+  created_at: string;
+  updated_at: string;
+  visibility: string;
 }
 
 // API Response Types based on Codegen API
