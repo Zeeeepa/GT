@@ -1,199 +1,90 @@
-import {
-  AgentRunResponse,
-  OrganizationResponse,
-  CreateAgentRunRequest,
-  APIError,
-  CodegenRepository,
-  UserResponse,
-  ResumeAgentRunRequest,
-  StopAgentRunRequest,
-} from '../types';
-import { getCredentials, validateCredentials } from '../utils/credentials';
-import { showToast, ToastStyle } from '../utils/toast';
-import { clearStoredUserInfo } from '../storage/userStorage';
+// API service for Codegen API
+import { getAPIClient } from './apiClient';
 
+const CODEGEN_ORG_ID = import.meta.env.VITE_CODEGEN_ORG_ID;
 
-// --- API Constants ---
+interface ResumeAgentRunParams {
+  prompt: string;
+  additionalContext?: string;
+  images?: string[];
+  metadata?: Record<string, any>;
+}
 
-const DEFAULT_API_BASE_URL = "/api/codegen";
+interface CreateAgentRunParams {
+  repository: string;
+  prompt: string;
+  images?: string[];
+}
 
-const API_ENDPOINTS = {
-  // User endpoints
-  USER_ME: "/v1/users/me",
-  
-  // Organization endpoints
-  ORGANIZATIONS: "/v1/organizations",
-  ORGANIZATIONS_PAGINATED: (page: number, size: number) => `/v1/organizations?page=${page}&size=${size}`,
-  
-  // Agent Run endpoints
-  AGENT_RUN_CREATE: (organizationId: number | string) => 
-    `/v1/organizations/${organizationId}/agent/run`,
-  AGENT_RUN_GET: (organizationId: number | string, agentRunId: number) => 
-    `/v1/organizations/${organizationId}/agent/run/${agentRunId}`,
-  AGENT_RUN_RESUME: (organizationId: number | string) => 
-    `/v1/organizations/${organizationId}/agent/run/resume`,
-  AGENT_RUN_STOP: (organizationId: number) => 
-    `/v1/beta/organizations/${organizationId}/agent/run/stop`,
-} as const;
-
-
-// --- API Client Class ---
-
-class CodegenAPIClient {
-  private baseUrl: string;
-  private apiToken: string;
-
-  constructor() {
-    this.baseUrl = DEFAULT_API_BASE_URL;
-    this.apiToken = '';
+// Get agent run details
+export const getAgentRun = async (runId: string) => {
+  try {
+    const apiClient = getAPIClient();
+    return await apiClient.getAgentRun(CODEGEN_ORG_ID, runId);
+  } catch (error) {
+    console.error('Error fetching agent run:', error);
+    throw error;
   }
+};
 
-  private async initializeCredentials(): Promise<void> {
-    if (!this.apiToken) {
-      const credentials = await getCredentials();
-      this.apiToken = credentials.apiToken;
-    }
-  }
-
-  public async refreshCredentials(): Promise<void> {
-    const credentials = await getCredentials();
-    this.apiToken = credentials.apiToken;
-  }
-
-  private async makeRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    await this.initializeCredentials();
-    const url = `${this.baseUrl}${endpoint}`;
-    
-    const defaultHeaders = {
-      "Authorization": `Bearer ${this.apiToken}`,
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-    };
-
-    try {
-      const response = await fetch(url, {
-        ...options,
-        mode: "cors",
-        headers: { ...defaultHeaders, ...options.headers },
-      });
-
-      if (!response.ok) {
-        await this.handleAPIError(response);
-      }
-      
-      if (response.status === 204 || response.headers.get('content-length') === '0') {
-        return null as T;
-      }
-
-      return await response.json() as T;
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
-      throw new Error(`Request failed: ${String(error)}`);
-    }
-  }
-
-  private async handleAPIError(response: Response): Promise<never> {
-    let errorMessage = `Request failed with status ${response.status}`;
-    try {
-      const errorData = await response.json();
-      errorMessage = (errorData as any).detail || errorData.message || errorMessage;
-    } catch {}
-
-    if (response.status === 401 || response.status === 403) {
-      showToast({
-        style: ToastStyle.Failure,
-        title: "Authentication Error",
-        message: "Invalid or expired API token. Please update your credentials."
-      });
-      throw new Error("Authentication failed");
+// Resume an agent run
+export const resumeAgentRun = async (runId: string, params: ResumeAgentRunParams) => {
+  try {
+    // Validate input
+    if (!params.prompt || params.prompt.trim() === '') {
+      throw new Error('Prompt is required');
     }
 
-    showToast({
-      style: ToastStyle.Failure,
-      title: "API Error",
-      message: errorMessage,
+    const apiClient = getAPIClient();
+    return await apiClient.resumeAgentRun(CODEGEN_ORG_ID, runId, {
+      prompt: params.prompt,
+      images: params.images,
+      metadata: {
+        additionalContext: params.additionalContext || '',
+        ...params.metadata
+      }
     });
-
-    throw new Error(errorMessage);
+  } catch (error) {
+    console.error('Error resuming agent run:', error);
+    throw error;
   }
+};
 
-  // --- Agent Run Methods ---
-
-  async createAgentRun(organizationId: string, request: CreateAgentRunRequest): Promise<AgentRunResponse> {
-    return this.makeRequest<AgentRunResponse>(
-      API_ENDPOINTS.AGENT_RUN_CREATE(organizationId),
-      { method: "POST", body: JSON.stringify(request) }
-    );
-  }
-
-  async getAgentRun(organizationId: string, agentRunId: number): Promise<AgentRunResponse> {
-    return this.makeRequest<AgentRunResponse>(
-      API_ENDPOINTS.AGENT_RUN_GET(organizationId, agentRunId)
-    );
-  }
-
-  async resumeAgentRun(organizationId: string, agentRunId: number, request: { prompt: string }): Promise<AgentRunResponse> {
-    const fullRequest: ResumeAgentRunRequest = {
-        ...request,
-        agent_run_id: agentRunId
-    };
-    return this.makeRequest<AgentRunResponse>(
-      API_ENDPOINTS.AGENT_RUN_RESUME(organizationId),
-      { 
-        method: "POST",
-        body: JSON.stringify(fullRequest),
-      }
-    );
-  }
-
-  async stopAgentRun(organizationId: number, request: StopAgentRunRequest): Promise<AgentRunResponse> {
-    return this.makeRequest<AgentRunResponse>(
-      API_ENDPOINTS.AGENT_RUN_STOP(organizationId),
-      {
-        method: "POST",
-        body: JSON.stringify(request),
-      }
-    );
-  }
-  
-  // --- Organization & User Methods ---
-
-  async getOrganizations(page = 1, size = 50): Promise<{ items: OrganizationResponse[] }> {
-    return this.makeRequest<{ items: OrganizationResponse[] }>(
-      API_ENDPOINTS.ORGANIZATIONS_PAGINATED(page, size)
-    );
-  }
-
-  async getMe(): Promise<UserResponse> {
-    return this.makeRequest<UserResponse>(API_ENDPOINTS.USER_ME);
-  }
-
-
-  // --- Validation ---
-  
-  async validateConnection(): Promise<boolean> {
-    try {
-      const result = await validateCredentials();
-      return result.isValid;
-    } catch {
-      return false;
+// Create a new agent run
+export const createAgentRun = async (params: CreateAgentRunParams) => {
+  try {
+    // Validate input
+    if (!params.repository || params.repository.trim() === '') {
+      throw new Error('Repository is required');
     }
+
+    if (!params.prompt || params.prompt.trim() === '') {
+      throw new Error('Prompt is required');
+    }
+
+    const apiClient = getAPIClient();
+    return await apiClient.createAgentRun(CODEGEN_ORG_ID, {
+      repository: params.repository,
+      prompt: params.prompt,
+      images: params.images
+    });
+  } catch (error) {
+    console.error('Error creating agent run:', error);
+    throw error;
   }
-}
+};
 
-// Singleton instance
-let apiClient: CodegenAPIClient | null = null;
-
-export function getAPIClient(): CodegenAPIClient {
-  if (!apiClient) {
-    apiClient = new CodegenAPIClient();
+// List agent runs
+export const listAgentRuns = async (params?: { status?: string; page?: number; limit?: number }) => {
+  try {
+    const apiClient = getAPIClient();
+    return await apiClient.listAgentRuns(CODEGEN_ORG_ID, params);
+  } catch (error) {
+    console.error('Error listing agent runs:', error);
+    throw error;
   }
-  return apiClient;
-}
+};
 
-export async function resetAPIClient(): Promise<void> {
-  apiClient = null;
-  await clearStoredUserInfo();
-}
+// Re-export the getAPIClient function
+export { getAPIClient } from './apiClient';
+

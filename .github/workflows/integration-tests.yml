@@ -1,0 +1,173 @@
+name: 🔄 Integration Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+# Cancel previous runs when new commits are pushed to the same PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# Set permissions for GitHub token
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  api-integration:
+    name: API Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Create integration test file
+        run: |
+          mkdir -p tests/integration
+          cat > tests/integration/agent-api.test.ts << 'EOL'
+          import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
+          import { resumeAgentRun } from '../../services/codegenApiService';
+          
+          describe('Agent API Integration Tests', () => {
+            // Use mock server for integration tests
+            const mockServer = {
+              start: vi.fn(),
+              stop: vi.fn(),
+              url: 'http://localhost:8080'
+            };
+            
+            beforeAll(async () => {
+              await mockServer.start();
+            });
+            
+            afterAll(async () => {
+              await mockServer.stop();
+            });
+            
+            it('should successfully resume an agent run', async () => {
+              // Test with actual prompt template
+              const result = await resumeAgentRun('test-run-id', {
+                prompt: 'Fix the bug in the login component',
+                additionalContext: 'The login fails when using special characters'
+              });
+              
+              expect(result).toBeDefined();
+              expect(result.id).toBeDefined();
+              expect(result.status).toBe('running');
+            });
+            
+            it('should handle errors when resuming an agent run', async () => {
+              // Test error handling
+              await expect(
+                resumeAgentRun('invalid-run-id', {
+                  prompt: 'Invalid prompt'
+                })
+              ).rejects.toThrow();
+            });
+            
+            it('should validate input parameters', async () => {
+              // Test with empty prompt
+              await expect(
+                resumeAgentRun('test-run-id', {
+                  prompt: ''
+                })
+              ).rejects.toThrow();
+            });
+          });
+          EOL
+          
+      - name: Run integration tests
+        run: npm run test:integration
+        env:
+          VITE_CODEGEN_TOKEN: ${{ secrets.CODEGEN_TOKEN || 'mock-codegen-token' }}
+          VITE_CODEGEN_ORG_ID: ${{ secrets.CODEGEN_ORG_ID || '123' }}
+          VITE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN || 'mock-github-token' }}
+          
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results
+          path: integration-test-results/
+          
+  e2e-tests:
+    name: End-to-End Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+        
+      - name: Create E2E test file
+        run: |
+          mkdir -p tests/e2e
+          cat > tests/e2e/agent-resume.spec.ts << 'EOL'
+          import { test, expect } from '@playwright/test';
+          
+          test('should display agent run details and allow resuming', async ({ page }) => {
+            // Navigate to agent run details page
+            await page.goto('/agents/runs/test-run-id');
+            
+            // Check if the page loads correctly
+            await expect(page.locator('h1')).toContainText('Agent Run Details');
+            
+            // Check if the resume button is visible
+            const resumeButton = page.locator('button:has-text("Resume")');
+            await expect(resumeButton).toBeVisible();
+            
+            // Click the resume button
+            await resumeButton.click();
+            
+            // Check if the resume dialog appears
+            await expect(page.locator('dialog')).toBeVisible();
+            
+            // Fill in the prompt
+            await page.fill('textarea[name="prompt"]', 'Continue with the task');
+            
+            // Submit the form
+            await page.click('button:has-text("Submit")');
+            
+            // Check if the success message appears
+            await expect(page.locator('.success-message')).toBeVisible();
+          });
+          EOL
+          
+      - name: Run E2E tests
+        run: npm run test:e2e
+        env:
+          VITE_CODEGEN_TOKEN: ${{ secrets.CODEGEN_TOKEN || 'mock-codegen-token' }}
+          VITE_CODEGEN_ORG_ID: ${{ secrets.CODEGEN_ORG_ID || '123' }}
+          VITE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN || 'mock-github-token' }}
+          
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-results
+          path: |
+            playwright-report/
+            test-results/
