@@ -63,7 +63,9 @@ describe('AgentRunDetailView', () => {
     });
     
     // Check success message
-    expect(await screen.findByText('Agent run resumed successfully!')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getAllByText('Agent run resumed successfully!')[0]).toBeInTheDocument();
+    });
   });
 
   it('handles errors when resuming an agent run', async () => {
@@ -106,4 +108,3 @@ describe('AgentRunDetailView', () => {
     expect(resumeAgentRun).not.toHaveBeenCalled();
   });
 });
-

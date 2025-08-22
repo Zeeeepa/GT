@@ -124,11 +124,16 @@ const AgentRunDetailView: React.FC<AgentRunDetailViewProps> = ({ runId }) => {
         <dialog open className="resume-dialog">
           <h2>Resume Agent Run</h2>
           
+          {resumeSuccess && (
+            <div className="success-message">Agent run resumed successfully!</div>
+          )}
+          
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="prompt">Prompt</label>
               <textarea
                 id="prompt"
+                name="prompt"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="Enter a prompt to continue the agent run"
@@ -143,6 +148,7 @@ const AgentRunDetailView: React.FC<AgentRunDetailViewProps> = ({ runId }) => {
               <label htmlFor="additionalContext">Additional Context (optional)</label>
               <textarea
                 id="additionalContext"
+                name="additionalContext"
                 value={additionalContext}
                 onChange={(e) => setAdditionalContext(e.target.value)}
                 placeholder="Enter any additional context"
@@ -160,10 +166,6 @@ const AgentRunDetailView: React.FC<AgentRunDetailViewProps> = ({ runId }) => {
             {resumeError && !resumeError.includes('Prompt') && (
               <div className="error-message">{resumeError}</div>
             )}
-            
-            {resumeSuccess && (
-              <div className="success-message">Agent run resumed successfully!</div>
-            )}
           </form>
         </dialog>
       )}
@@ -172,4 +174,3 @@ const AgentRunDetailView: React.FC<AgentRunDetailViewProps> = ({ runId }) => {
 };
 
 export default AgentRunDetailView;
-

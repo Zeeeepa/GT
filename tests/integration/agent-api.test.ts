@@ -5,7 +5,7 @@
  * including proper handling of parameters, responses, and errors.
  */
 
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
 import { getAgentRun, resumeAgentRun, createAgentRun, listAgentRuns } from '../../services/codegenApiService';
 import { APIClient } from '../../services/apiClient';
 
@@ -41,7 +41,7 @@ const handlers = [
       id: 'test-run-id',
       status: 'running',
       prompt: body.prompt,
-      additionalContext: body.additionalContext || '',
+      additionalContext: body.metadata?.additionalContext || '',
       images: body.images || [],
       metadata: body.metadata || {},
       createdAt: '2023-01-01T00:00:00Z',
