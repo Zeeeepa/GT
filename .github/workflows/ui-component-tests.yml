@@ -11,6 +11,12 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+# Set permissions for GitHub token
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   component-tests:
     name: Component Tests
@@ -160,4 +166,3 @@ jobs:
               repo: context.repo.repo,
               body: report
             });
-

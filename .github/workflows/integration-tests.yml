@@ -11,6 +11,12 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+# Set permissions for GitHub token
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   api-integration:
     name: API Integration Tests
@@ -165,4 +171,3 @@ jobs:
           path: |
             playwright-report/
             test-results/
-
