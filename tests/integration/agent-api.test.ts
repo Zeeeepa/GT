@@ -15,8 +15,8 @@ import { http, HttpResponse } from 'msw';
 
 // Create handlers for API endpoints
 const handlers = [
-  // Mock getAgentRun
-  http.get('https://api.codegen.com/v1/organizations/:orgId/agent-runs/:runId', () => {
+  // Mock getAgentRun - use a more permissive path pattern
+  http.get('*/agent-runs/*', () => {
     return HttpResponse.json({
       id: 'test-run-id',
       status: 'completed',
@@ -26,8 +26,8 @@ const handlers = [
     });
   }),
   
-  // Mock resumeAgentRun
-  http.post('https://api.codegen.com/v1/organizations/:orgId/agent-runs/:runId/resume', async ({ request }) => {
+  // Mock resumeAgentRun - use a more permissive path pattern
+  http.post('*/agent-runs/*/resume', async ({ request }) => {
     const body = await request.json();
     
     if (!body.prompt) {
@@ -49,8 +49,8 @@ const handlers = [
     });
   }),
   
-  // Mock createAgentRun
-  http.post('https://api.codegen.com/v1/organizations/:orgId/agent-runs', async ({ request }) => {
+  // Mock createAgentRun - use a more permissive path pattern
+  http.post('*/agent-runs', async ({ request }) => {
     const body = await request.json();
     
     if (!body.repository) {
@@ -78,8 +78,8 @@ const handlers = [
     });
   }),
   
-  // Mock listAgentRuns
-  http.get('https://api.codegen.com/v1/organizations/:orgId/agent-runs', ({ request }) => {
+  // Mock listAgentRuns - use a more permissive path pattern
+  http.get('*/agent-runs', ({ request }) => {
     const url = new URL(request.url);
     const status = url.searchParams.get('status');
     const page = url.searchParams.get('page') || '1';

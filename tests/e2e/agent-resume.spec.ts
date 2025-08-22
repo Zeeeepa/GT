@@ -31,8 +31,8 @@ test('should display agent run details and allow resuming', async ({ page }) => 
   // Navigate to agent run details page
   await page.goto('/agents/runs/test-run-id');
   
-  // Check if the page loads correctly
-  await expect(page.locator('h1')).toContainText('Agent Run Details');
+  // Check if the page loads correctly - match the actual content
+  await expect(page.locator('h1')).toContainText('Codegen Agent Dashboard');
   
   // Check if the resume button is visible
   const resumeButton = page.locator('button:has-text("Resume")');
