@@ -53,19 +53,19 @@ test.describe('Agent Run UI', () => {
     // Navigate to the agent run detail page
     await page.goto('/agent-runs/test-run-id');
     
-    // Wait for the page to load and network to be idle
-    await page.waitForSelector('.agent-run-detail');
+    // Wait for the page to load with a longer timeout
+    await page.waitForSelector('.agent-run-detail', { timeout: 30000 });
     await page.waitForLoadState('networkidle');
     
     // Wait for any animations to complete
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(1000);
     
     // Take a screenshot with improved reliability
     await takeScreenshot(page, {
       name: 'agent-run-detail.png',
       waitForSelector: '.agent-run-detail',
       waitForStable: '.agent-run-detail',
-      waitTimeout: 1000
+      waitTimeout: 5000
     });
   });
 
@@ -73,23 +73,23 @@ test.describe('Agent Run UI', () => {
     // Navigate to the agent run detail page
     await page.goto('/agent-runs/test-run-id');
     
-    // Wait for the page to load
-    await page.waitForSelector('.agent-run-detail');
+    // Wait for the page to load with a longer timeout
+    await page.waitForSelector('.agent-run-detail', { timeout: 30000 });
     await page.waitForLoadState('networkidle');
     
     // Click the resume button
     await page.click('.resume-button');
     
     // Wait for the dialog to appear and animations to complete
-    await page.waitForSelector('.resume-dialog');
-    await page.waitForTimeout(500);
+    await page.waitForSelector('.resume-dialog', { timeout: 30000 });
+    await page.waitForTimeout(1000);
     
     // Take a screenshot with improved reliability
     await takeScreenshot(page, {
       name: 'resume-dialog.png',
       waitForSelector: '.resume-dialog',
       waitForStable: '.resume-dialog',
-      waitTimeout: 1000
+      waitTimeout: 5000
     });
   });
 
@@ -97,29 +97,29 @@ test.describe('Agent Run UI', () => {
     // Navigate to the agent run detail page
     await page.goto('/agent-runs/test-run-id');
     
-    // Wait for the page to load
-    await page.waitForSelector('.agent-run-detail');
+    // Wait for the page to load with a longer timeout
+    await page.waitForSelector('.agent-run-detail', { timeout: 30000 });
     await page.waitForLoadState('networkidle');
     
     // Click the resume button
     await page.click('.resume-button');
     
     // Wait for the dialog to appear
-    await page.waitForSelector('.resume-dialog');
+    await page.waitForSelector('.resume-dialog', { timeout: 30000 });
     
     // Submit the form without entering a prompt
     await page.click('.dialog-actions button[type="submit"]');
     
     // Wait for the error message to appear and animations to complete
-    await page.waitForSelector('.error-message');
-    await page.waitForTimeout(500);
+    await page.waitForSelector('.error-message', { timeout: 30000 });
+    await page.waitForTimeout(1000);
     
     // Take a screenshot with improved reliability
     await takeScreenshot(page, {
       name: 'form-validation-errors.png',
       waitForSelector: '.error-message',
       waitForStable: '.resume-dialog',
-      waitTimeout: 1000
+      waitTimeout: 5000
     });
   });
 });

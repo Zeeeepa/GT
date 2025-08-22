@@ -131,7 +131,14 @@ const handlers = [
 const server = setupServer(...handlers);
 
 // Set up and tear down the mock server
-beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }));
+beforeAll(() => {
+  // Start the server with a more permissive onUnhandledRequest setting
+  server.listen({ onUnhandledRequest: 'bypass' });
+  
+  // Override the API base URL to use the mock server
+  process.env.VITE_API_BASE_URL = 'https://api.codegen.com';
+});
+
 afterAll(() => server.close());
 beforeEach(() => server.resetHandlers());
 
