@@ -147,13 +147,17 @@ export default function ProjectsView({}: ProjectsViewProps) {
   }, []);
 
   const fetchInitialData = useCallback(async (token: string, apiUrl: string) => {
+    console.log("Fetching initial data with token:", token ? "Token provided" : "No token");
     setLoading('Fetching your GitHub repositories...');
     setPageError(null);
     try {
+      console.log("Calling fetchRepositories...");
       const fetchedRepos = await fetchRepositories(apiUrl, token);
+      console.log("Repositories fetched:", fetchedRepos.length);
       setAllRepositories(fetchedRepos);
       setView({ type: 'all' });
     } catch (err) {
+      console.error("Error fetching repositories:", err);
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
       if (err instanceof GithubApiError && (err.status === 401 || err.status === 403)) {
          setPageError('Configuration error: Your GitHub token is invalid, has expired, or lacks necessary permissions. Please check your token and its permissions.');
@@ -178,7 +182,11 @@ export default function ProjectsView({}: ProjectsViewProps) {
   useEffect(() => {
     const loadCodegenRepos = async () => {
       try {
-        const repos = await getCodegenService().getRepositories();
+        console.log("Getting Codegen service...");
+        const service = getCodegenService();
+        console.log("Fetching repositories...");
+        const repos = await service.getRepositories();
+        console.log("Repositories fetched:", repos);
         const map: Record<string, { id: number }> = {};
         for (const r of repos) {
           const key = (r as any).full_name || r.name; // API returns full_name per docs
@@ -186,6 +194,7 @@ export default function ProjectsView({}: ProjectsViewProps) {
         }
         setCodegenRepos(map);
       } catch (e) {
+        console.error("Error loading Codegen repositories:", e);
         // ignore if Codegen creds not set
       }
     };
@@ -195,7 +204,14 @@ export default function ProjectsView({}: ProjectsViewProps) {
   // Poll Codegen for pending run completion per project, update notifications
   useEffect(() => {
     let cancelled = false;
-    const service = getCodegenService();
+    let service;
+    
+    try {
+      service = getCodegenService();
+    } catch (error) {
+      console.error("Error getting Codegen service:", error);
+      return;
+    }
 
     const checkPending = async () => {
       const updated: Record<string, number[]> = {};
