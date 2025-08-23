@@ -1,81 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import { BellIcon } from 'lucide-react';
-import { LocalStorage } from '../../utils/storage';
-
-interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  timestamp: string;
-  read: boolean;
-  type: 'info' | 'success' | 'warning' | 'error';
-  link?: string;
-}
-
-const STORAGE_KEY = 'notifications';
+import { 
+  loadNotifications, 
+  markNotificationAsRead, 
+  markAllNotificationsAsRead, 
+  deleteNotification,
+  countUnreadNotifications,
+  Notification
+} from '../../utils/notificationSystem';
 
 export const NotificationsIcon: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   
-  // Load notifications from local storage
+  // Load notifications from notification system
   useEffect(() => {
-    const loadNotifications = async () => {
+    const fetchNotifications = async () => {
       try {
-        const storedNotifications = await LocalStorage.getItem<string>(STORAGE_KEY);
-        if (storedNotifications) {
-          setNotifications(JSON.parse(storedNotifications));
-        }
+        const notifs = await loadNotifications();
+        setNotifications(notifs);
       } catch (error) {
         console.error('Error loading notifications:', error);
       }
     };
     
-    loadNotifications();
+    fetchNotifications();
+    
+    // Set up an interval to refresh notifications every 30 seconds
+    const intervalId = setInterval(fetchNotifications, 30000);
+    
+    return () => clearInterval(intervalId);
   }, []);
   
-  // Save notifications to local storage
-  const saveNotifications = async (updatedNotifications: Notification[]) => {
-    try {
-      await LocalStorage.setItem(STORAGE_KEY, JSON.stringify(updatedNotifications));
-      setNotifications(updatedNotifications);
-    } catch (error) {
-      console.error('Error saving notifications:', error);
-    }
-  };
-  
-  // Add a new notification
-  const addNotification = (notification: Omit<Notification, 'id' | 'timestamp' | 'read'>) => {
-    const newNotification: Notification = {
-      ...notification,
-      id: `notification-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      timestamp: new Date().toISOString(),
-      read: false,
-    };
-    
-    const updatedNotifications = [newNotification, ...notifications];
-    saveNotifications(updatedNotifications);
-  };
-  
   // Mark a notification as read
-  const markAsRead = (id: string) => {
-    const updatedNotifications = notifications.map(notification => 
-      notification.id === id ? { ...notification, read: true } : notification
-    );
-    
-    saveNotifications(updatedNotifications);
+  const markAsRead = async (id: string) => {
+    await markNotificationAsRead(id);
+    // Refresh the notifications list
+    const notifs = await loadNotifications();
+    setNotifications(notifs);
   };
   
   // Mark all notifications as read
-  const markAllAsRead = () => {
-    const updatedNotifications = notifications.map(notification => ({ ...notification, read: true }));
-    saveNotifications(updatedNotifications);
+  const markAllAsRead = async () => {
+    await markAllNotificationsAsRead();
+    // Refresh the notifications list
+    const notifs = await loadNotifications();
+    setNotifications(notifs);
   };
   
   // Delete a notification
-  const deleteNotification = (id: string) => {
-    const updatedNotifications = notifications.filter(notification => notification.id !== id);
-    saveNotifications(updatedNotifications);
+  const handleDeleteNotification = async (id: string) => {
+    await deleteNotification(id);
+    // Refresh the notifications list
+    const notifs = await loadNotifications();
+    setNotifications(notifs);
   };
   
   // Count unread notifications
@@ -151,7 +129,7 @@ export const NotificationsIcon: React.FC = () => {
                         </div>
                       </div>
                       <button
-                        onClick={() => deleteNotification(notification.id)}
+                        onClick={() => handleDeleteNotification(notification.id)}
                         className="ml-2 text-text-secondary hover:text-danger"
                         aria-label="Delete notification"
                       >
@@ -169,31 +147,7 @@ export const NotificationsIcon: React.FC = () => {
   );
 };
 
-// Export a function to add notifications from other components
-export const addNotification = async (notification: Omit<Notification, 'id' | 'timestamp' | 'read'>) => {
-  try {
-    const storedNotifications = await LocalStorage.getItem<string>(STORAGE_KEY);
-    let notifications: Notification[] = [];
-    
-    if (storedNotifications) {
-      notifications = JSON.parse(storedNotifications);
-    }
-    
-    const newNotification: Notification = {
-      ...notification,
-      id: `notification-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      timestamp: new Date().toISOString(),
-      read: false,
-    };
-    
-    const updatedNotifications = [newNotification, ...notifications];
-    await LocalStorage.setItem(STORAGE_KEY, JSON.stringify(updatedNotifications));
-    
-    return true;
-  } catch (error) {
-    console.error('Error adding notification:', error);
-    return false;
-  }
-};
+// Re-export the addNotification function from the notification system
+export { addNotification } from '../../utils/notificationSystem';
 
 export default NotificationsIcon;

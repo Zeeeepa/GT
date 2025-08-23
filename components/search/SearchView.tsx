@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { SearchBar } from './SearchBar';
 import { SearchResults } from './SearchResults';
@@ -111,7 +110,7 @@ const SearchView: React.FC<SearchViewProps> = ({ githubToken, setGithubToken }) 
                         setTotalCount(npmResults.total);
                     }
                 } else {
-                    if (fullParams.sort && fullParams.sort !== '') {
+                    if (fullParams.sort && fullParams.sort !== '' as any) {
                         setLoadingMessage(`Searching and sorting by ${fullParams.sort === 'package-size' ? 'biggest files' : 'newest updated'}...`);
                     } else {
                         setLoadingMessage('Searching...');

@@ -27,24 +27,24 @@ export const RunCard: React.FC<RunCardProps> = ({
   const getStatusColor = (status: AgentRunStatus) => {
     switch (status) {
       case AgentRunStatus.COMPLETED:
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-500/20 text-green-400';
       case AgentRunStatus.RUNNING:
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-blue-500/20 text-blue-400';
       case AgentRunStatus.FAILED:
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-500/20 text-red-400';
       case AgentRunStatus.PENDING:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-yellow-500/20 text-yellow-400';
       case AgentRunStatus.CANCELLED:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-500/20 text-gray-400';
       case AgentRunStatus.PAUSED:
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-orange-500/20 text-orange-400';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-500/20 text-gray-400';
     }
   };
 
   return (
-    <div className="flex items-center justify-between p-4 bg-hover rounded-lg hover:bg-border-color transition-colors">
+    <div className="flex items-center justify-between p-4 bg-hover rounded-lg hover:bg-border-color transition-colors border border-border-color/50">
       <div className="flex-1 min-w-0">
         <div className="flex items-center space-x-3">
           <div className="flex-1 min-w-0">
@@ -119,4 +119,3 @@ export const RunCard: React.FC<RunCardProps> = ({
     </div>
   );
 };
-

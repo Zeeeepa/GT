@@ -22,6 +22,9 @@ export default {
         success: 'var(--color-success)',
         'neon-green': '#39FF14',
       },
+      animation: {
+        'spin-slow': 'spin 3s linear infinite',
+      },
     },
   },
   plugins: [],

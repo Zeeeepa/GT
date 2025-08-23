@@ -184,7 +184,7 @@ class EnhancedNpmSearch {
             repository: pkg.links?.repository || '',
             keywords: pkg.keywords || [],
             downloads: item.downloads || { weekly: 0, monthly: 0 },
-            dependents: parseInt(item.dependents || '0'),
+            dependents: item.dependents || '0',
             updated: packageDate,
             score: item.score || { detail: { quality: 0, popularity: 0, maintenance: 0 } },
             unpackedSize: 0, // Will be enriched

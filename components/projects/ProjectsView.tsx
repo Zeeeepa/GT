@@ -618,13 +618,16 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
 
     return (
         <>
-            <div className="flex justify-end mb-4">
-                {repositoriesToDisplay.length > 0 && (
-                  <GenerateSetupCommands 
-                    projectId={repositoriesToDisplay[0].id} 
-                    organizationId={repositoriesToDisplay[0].owner?.id || 0} 
-                  />
-                )}
+            <div className="flex justify-between mb-4">
+                <h2 className="text-xl font-semibold">Projects</h2>
+                <div className="flex space-x-2">
+                    {repositoriesToDisplay.length > 0 && (
+                      <GenerateSetupCommands 
+                        projectId={repositoriesToDisplay[0].id} 
+                        organizationId={repositoriesToDisplay[0].owner?.id || 0} 
+                      />
+                    )}
+                </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
             {repositoriesToDisplay.map(repo => (

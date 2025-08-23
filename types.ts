@@ -369,3 +369,7 @@ export interface PaginationParams {
   skip?: number;
   limit?: number;
 }
+
+export interface StopAgentRunRequest {
+  agent_run_id: number;
+}

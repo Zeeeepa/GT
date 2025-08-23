@@ -89,7 +89,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ projects }) => {
       setPinnedProjects(projects);
     } catch (error) {
       console.error('Error saving pinned projects:', error);
-      showToast({ style: ToastStyle.Error, title: 'Error', message: 'Failed to save pinned projects' });
+      showToast({ style: ToastStyle.Failure, title: 'Error', message: 'Failed to save pinned projects' });
     }
   };
 
@@ -100,7 +100,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ projects }) => {
       setPinnedAgentRuns(runs);
     } catch (error) {
       console.error('Error saving pinned agent runs:', error);
-      showToast({ style: ToastStyle.Error, title: 'Error', message: 'Failed to save pinned agent runs' });
+      showToast({ style: ToastStyle.Failure, title: 'Error', message: 'Failed to save pinned agent runs' });
     }
   };
 

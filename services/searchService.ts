@@ -1,4 +1,3 @@
-
 import type { SearchParams, SearchResult, NpmPackage, NpmPackageDetail, FileNode, TrendingDateRange, SearchGithubRepo, SearchGithubCodeItem } from '../types';
 import { searchNpmPackagesEnhanced } from './npmEnhancedSearch';
 
@@ -270,12 +269,12 @@ export const getRepoDetails = async (fullName: string, token: string | null): Pr
 export const searchNpmPackages = async (params: SearchParams): Promise<{ packages: NpmPackage[], total: number }> => {
     const { query, limit, startDate, endDate, sort } = params;
     const trimmedQuery = query.trim();
-    if (!trimmedQuery) return [];
+    if (!trimmedQuery) return { packages: [], total: 0 };
 
     // NPM API limit is 250
     // For sorting, fetch more results to get a better sample for sorting
     const baseFetchSize = Math.min(limit, 250);
-    const fetchSize = sort && sort !== '' ? Math.min(baseFetchSize * 3, 250) : baseFetchSize;
+    const fetchSize = sort && sort !== '' as any ? Math.min(baseFetchSize * 3, 250) : baseFetchSize;
 
     const queryParams = new URLSearchParams({
         text: trimmedQuery,
@@ -358,7 +357,7 @@ export const searchNpmPackages = async (params: SearchParams): Promise<{ package
         }
 
         // Apply sorting if specified
-        if (sort && sort !== '') {
+        if (sort && sort !== '' as any) {
             allPackages = sortNpmPackages(allPackages, sort);
         }
 

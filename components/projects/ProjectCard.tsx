@@ -272,7 +272,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             </div>
         </div>
         {typeof commitsBehind === 'number' && commitsBehind > 0 && (
-          <div className="mt-1.5 text-[11px] text-yellow-400">{commitsBehind} commits behind</div>
+          <div className="mt-1.5 text-[11px] bg-yellow-500/15 text-yellow-400 border border-yellow-500/30 px-2 py-0.5 rounded inline-flex items-center font-medium">
+            <SyncIcon className="w-3 h-3 mr-1 animate-spin-slow" />
+            {commitsBehind} {commitsBehind === 1 ? 'PR' : 'PRs'} behind
+          </div>
         )}
         {repoLists.length > 0 && (
           <div className="mt-1.5 flex flex-wrap gap-1">
@@ -307,4 +310,3 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 };
 
 export default ProjectCard;
-

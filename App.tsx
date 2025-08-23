@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ProjectsView from './components/projects/ProjectsView';
 import SearchView from './components/search/SearchView';
 import AgentsView from './components/agents/AgentsView';
-import Dashboard from './components/dashboard/Dashboard';
+import DashboardView from './components/dashboard/DashboardView';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import ActiveAgentRunsCounter from './components/header/ActiveAgentRunsCounter';
 import NotificationsIcon from './components/header/NotificationsIcon';
@@ -19,6 +19,24 @@ const App = () => {
     setSelectedAgentRunId(agentRunId);
     setMode('agents');
   };
+
+  const [projects, setProjects] = useState<any[]>([]);
+
+  // Fetch projects for the Dashboard
+  React.useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        // If we have a ProjectsView component instance, we can get projects from there
+        // For now, we'll just use an empty array
+        // In a real implementation, you would fetch projects from your API
+        setProjects([]);
+      } catch (error) {
+        console.error('Error fetching projects for dashboard:', error);
+      }
+    };
+    
+    fetchProjects();
+  }, []);
 
   return (
     <div className="h-screen w-screen flex flex-col bg-primary text-text-primary overflow-hidden">
@@ -37,7 +55,7 @@ const App = () => {
         </div>
       </header>
       <div className="flex-1 overflow-hidden">
-        {mode === 'dashboard' && <Dashboard projects={[]} />}
+        {mode === 'dashboard' && <DashboardView onViewAgentRun={handleViewAgentRun} />}
         {mode === 'projects' && <ProjectsView githubToken={githubToken} setGithubToken={setGithubToken} githubApiUrl={githubApiUrl} />}
         {mode === 'search' && <SearchView githubToken={githubToken} setGithubToken={setGithubToken} />}
         {mode === 'agents' && <AgentsView initialSelectedRunId={selectedAgentRunId} />}

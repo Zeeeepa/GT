@@ -1,5 +1,6 @@
 import { LocalStorage, Cache } from "../utils/storage";
-import { AgentRun, AgentRunStatus, TrackedAgentRun, AgentRunStatusChange } from "../types";
+import { AgentRun, AgentRunStatus } from "../types";
+import { CachedAgentRun } from "./cacheTypes";
 import { getAPIClient } from "../services/codegenApiService";
 import {
   AgentRunCacheEntry,

@@ -4,7 +4,7 @@ import { Plus, Clipboard as ClipboardIcon, Settings } from 'lucide-react';
 import { getAPIClient, resetAPIClient } from '../../../services/codegenApiService';
 import { getAgentRunCache } from '../../../storage/agentRunCache';
 import { validateCredentials, hasCredentials, getCredentials, getDefaultOrganizationId } from '../../../utils/credentials';
-import { OrganizationResponse, CreateAgentRunRequest } from '../../../types';
+import { Organization, CreateAgentRunRequest } from '../../../types';
 import { getBackgroundMonitoringService } from '../../../utils/backgroundMonitoring';
 import LoadingSpinner from '../../shared/LoadingSpinner';
 
@@ -16,7 +16,7 @@ interface CreateRunDialogProps {
 
 export const CreateRunDialog: React.FC<CreateRunDialogProps> = ({ isOpen, onClose, onCreated }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [organizations, setOrganizations] = useState<OrganizationResponse[]>([]);
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [isLoadingOrgs, setIsLoadingOrgs] = useState(true);
   const [validationError, setValidationError] = useState<string | null>(null);
 

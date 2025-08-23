@@ -1,14 +1,14 @@
 import { LocalStorage } from "../utils/storage";
-import { UserResponse } from "../types";
+import { User } from "../types";
 
-export interface StoredUserInfo extends UserResponse {
+export interface StoredUserInfo extends User {
   lastUpdated: string;
   apiToken: string;
 }
 
 const USER_STORAGE_KEY = "codegen_current_user_info";
 
-export async function storeUserInfo(userInfo: UserResponse, apiToken: string): Promise<void> {
+export async function storeUserInfo(userInfo: User, apiToken: string): Promise<void> {
   const storedUserInfo: StoredUserInfo = {
     ...userInfo,
     lastUpdated: new Date().toISOString(),
@@ -38,7 +38,7 @@ export async function isStoredUserInfoValid(currentApiToken: string): Promise<bo
   return storedInfo.apiToken === currentApiToken;
 }
 
-export function getUserDisplayName(userInfo: UserResponse): string {
+export function getUserDisplayName(userInfo: User): string {
   if (userInfo.full_name) return userInfo.full_name;
   if (userInfo.github_username) return `@${userInfo.github_username}`;
   if (userInfo.email) return userInfo.email;

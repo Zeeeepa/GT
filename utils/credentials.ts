@@ -1,7 +1,7 @@
 import { showToast, ToastStyle } from "./toast";
 import { LocalStorage } from "./storage";
 import { storeUserInfo, clearStoredUserInfo, isStoredUserInfoValid, getStoredUserInfo } from "../storage/userStorage";
-import { UserResponse, OrganizationResponse } from "../types";
+import { User, Organization } from "../types";
 import { getAPIClient } from '../services/codegenApiService';
 
 export interface Preferences {
@@ -13,7 +13,7 @@ export interface CredentialsValidationResult {
   isValid: boolean;
   error?: string;
   organizations?: Array<{ id: number; name: string }>;
-  userInfo?: UserResponse;
+  userInfo?: User;
 }
 
 export async function getCredentials(): Promise<Preferences> {
@@ -75,7 +75,7 @@ export async function getDefaultOrganizationId(): Promise<number | null> {
     return null;
 }
 
-export async function getCurrentUserInfo(): Promise<UserResponse | null> {
+export async function getCurrentUserInfo(): Promise<User | null> {
     const credentials = await getCredentials();
     if (await isStoredUserInfoValid(credentials.apiToken)) {
         return getStoredUserInfo();

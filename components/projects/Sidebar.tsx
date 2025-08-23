@@ -84,11 +84,15 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(({
           {onOpenSyncManagementModal && (
             <button 
               onClick={onOpenSyncManagementModal} 
-              className={`p-1 rounded-md hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-secondary focus:ring-accent transition-all duration-300`} 
+              className={`p-1 rounded-md hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-secondary focus:ring-accent transition-all duration-300 relative`} 
               aria-label="Sync Management"
               title="Sync Management"
             >
               <CogIcon className="w-8 h-8 text-text-primary" />
+              <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-accent"></span>
+              </span>
             </button>
           )}
         </div>
@@ -184,4 +188,3 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(({
 });
 
 export default Sidebar;
-

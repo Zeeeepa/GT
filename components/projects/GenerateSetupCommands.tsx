@@ -29,7 +29,7 @@ export const GenerateSetupCommands: React.FC<GenerateSetupCommandsProps> = ({ pr
     } catch (error) {
       console.error('Error generating setup commands:', error);
       showToast({ 
-        style: ToastStyle.Error, 
+        style: ToastStyle.Failure, 
         title: 'Error', 
         message: 'Failed to generate setup commands' 
       });
@@ -43,7 +43,7 @@ export const GenerateSetupCommands: React.FC<GenerateSetupCommandsProps> = ({ pr
       await navigator.clipboard.writeText(text);
       showToast({ style: ToastStyle.Success, title: 'Success', message: 'Command copied to clipboard' });
     } catch (error) {
-      showToast({ style: ToastStyle.Error, title: 'Error', message: 'Failed to copy command' });
+      showToast({ style: ToastStyle.Failure, title: 'Error', message: 'Failed to copy command' });
     }
   };
 
@@ -52,7 +52,7 @@ export const GenerateSetupCommands: React.FC<GenerateSetupCommandsProps> = ({ pr
       await navigator.clipboard.writeText(commands.join('\n'));
       showToast({ style: ToastStyle.Success, title: 'Success', message: 'All commands copied to clipboard' });
     } catch (error) {
-      showToast({ style: ToastStyle.Error, title: 'Error', message: 'Failed to copy commands' });
+      showToast({ style: ToastStyle.Failure, title: 'Error', message: 'Failed to copy commands' });
     }
   };
 

@@ -30,6 +30,12 @@ const ProjectPromptModal: React.FC<ProjectPromptModalProps> = ({ isOpen, onClose
     try {
       // Add project context to the prompt
       const contextualPrompt = `The project is '${repo.full_name}'. ${prompt.trim()}`;
+      
+      // Store the project context for this prompt in localStorage
+      if (repo) {
+        localStorage.setItem('last-project-context', repo.full_name);
+      }
+      
       await onSubmit(contextualPrompt);
       onClose();
     } finally {
