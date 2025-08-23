@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Dashboard from './Dashboard';
 import AgentRunsList from './AgentRunsList';
 import AgentRunDetails from './AgentRunDetails';
 import CreateAgentRunModal from './CreateAgentRunModal';
@@ -16,11 +15,15 @@ import { setCodegenCredentials, getRuntimeCodegenCredentials } from '../../servi
 import { getUnseenCount, clearUnseen } from '../../utils/notifications';
 // duplicate import removed
 
-type AgentView = 'dashboard' | 'runs' | 'logs' | 'integrations' | 'settings';
+type AgentView = 'runs' | 'logs' | 'integrations' | 'settings';
 
-const AgentsView: React.FC = () => {
-  const [currentView, setCurrentView] = useState<AgentView>('dashboard');
-  const [selectedAgentRunId, setSelectedAgentRunId] = useState<number | null>(null);
+interface AgentsViewProps {
+  initialSelectedRunId?: number | null;
+}
+
+const AgentsView: React.FC<AgentsViewProps> = ({ initialSelectedRunId = null }) => {
+  const [currentView, setCurrentView] = useState<AgentView>('runs');
+  const [selectedAgentRunId, setSelectedAgentRunId] = useState<number | null>(initialSelectedRunId);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [credsMissing, setCredsMissing] = useState(false);
   const [orgId, setOrgId] = useState('');
@@ -39,6 +42,14 @@ const AgentsView: React.FC = () => {
     setUnseen(getUnseenCount());
   }, []);
 
+  // Update selectedAgentRunId when initialSelectedRunId changes
+  useEffect(() => {
+    if (initialSelectedRunId) {
+      setSelectedAgentRunId(initialSelectedRunId);
+      setCurrentView('runs');
+    }
+  }, [initialSelectedRunId]);
+
   const handleAgentRunSelect = (agentRunId: number) => {
     setSelectedAgentRunId(agentRunId);
     setCurrentView('runs');
@@ -51,19 +62,11 @@ const AgentsView: React.FC = () => {
 
   const renderMainContent = () => {
     switch (currentView) {
-      case 'dashboard':
-        return (
-          <Dashboard 
-            onCreateRun={() => setShowCreateModal(true)}
-            onViewRun={handleAgentRunSelect}
-            onViewLogs={handleViewLogs}
-          />
-        );
       case 'runs':
         return selectedAgentRunId ? (
           <AgentRunDetails 
             agentRunId={selectedAgentRunId}
-            onBack={() => setCurrentView('dashboard')}
+            onBack={() => setSelectedAgentRunId(null)}
             onViewLogs={() => setCurrentView('logs')}
           />
         ) : (
@@ -174,15 +177,6 @@ const AgentsView: React.FC = () => {
             
             {/* Navigation */}
             <nav className="flex space-x-1">
-              <NavButton
-                icon={<CogIcon className="w-4 h-4" />}
-                label="Dashboard"
-                isActive={currentView === 'dashboard'}
-                onClick={() => {
-                  setCurrentView('dashboard');
-                  setSelectedAgentRunId(null);
-                }}
-              />
               <NavButton
                 icon={<ListBulletIcon className="w-4 h-4" />}
                 label="Agent Runs"

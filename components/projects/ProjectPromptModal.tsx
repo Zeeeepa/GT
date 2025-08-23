@@ -28,7 +28,9 @@ const ProjectPromptModal: React.FC<ProjectPromptModalProps> = ({ isOpen, onClose
     if (!prompt.trim()) return;
     setSubmitting(true);
     try {
-      await onSubmit(prompt.trim());
+      // Add project context to the prompt
+      const contextualPrompt = `The project is '${repo.full_name}'. ${prompt.trim()}`;
+      await onSubmit(contextualPrompt);
       onClose();
     } finally {
       setSubmitting(false);
@@ -74,5 +76,3 @@ const ProjectPromptModal: React.FC<ProjectPromptModalProps> = ({ isOpen, onClose
 };
 
 export default ProjectPromptModal;
-
-
