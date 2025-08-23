@@ -20,6 +20,7 @@ export default {
         'text-secondary': 'var(--color-text-secondary)',
         danger: 'var(--color-danger)',
         success: 'var(--color-success)',
+        'neon-green': '#39FF14',
       },
     },
   },

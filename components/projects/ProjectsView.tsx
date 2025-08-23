@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ProjectRepository, ProjectList, ProjectView } from '../../types';
 import { 
@@ -11,6 +10,7 @@ import {
 import { getCodegenService } from '../../services/codegenService';
 import { AgentRunStatus } from '../../types';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { usePinnedItems } from '../../hooks/usePinnedItems';
 import ProjectCard from './ProjectCard';
 import { ChatIcon } from '../shared/icons/ChatIcon';
 import ConfirmationModal from '../shared/ConfirmationModal';
@@ -21,6 +21,8 @@ import { EyeIcon } from '../shared/icons/EyeIcon';
 import { EyeSlashIcon } from '../shared/icons/EyeSlashIcon';
 import SettingsModal from './SettingsModal';
 import ProjectPromptModal from './ProjectPromptModal';
+import SetupCommandsModal from './SetupCommandsModal';
+import SyncManagementModal from './SyncManagementModal';
 
 interface ProjectsViewProps {
     githubToken: string;
@@ -45,6 +47,9 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
 
   const [isManageListsModalOpen, setIsManageListsModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isSyncManagementModalOpen, setIsSyncManagementModalOpen] = useState(false);
+  const [isSetupCommandsModalOpen, setIsSetupCommandsModalOpen] = useState(false);
+  const [selectedRepoForSetup, setSelectedRepoForSetup] = useState<ProjectRepository | null>(null);
 
   const [draggedOverListId, setDraggedOverListId] = useState<string | null>(null);
 
@@ -60,6 +65,13 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
   const [promptMode, setPromptMode] = useState<'chat' | 'info' | null>(null);
   const [codegenRepos, setCodegenRepos] = useState<Record<string, { id: number }>>({});
   const [projectPendingRuns, setProjectPendingRuns] = useLocalStorage<Record<string, number[]>>('projectPendingRuns', {});
+  
+  // Use the pinned items hook
+  const { 
+    pinnedProjects, 
+    toggleProjectPin, 
+    isProjectPinned 
+  } = usePinnedItems();
 
   // Sidebar resizing logic
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useLocalStorage('sidebarCollapsed', false);
@@ -605,6 +617,20 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
 
     return (
         <>
+            <div className="flex justify-end mb-4">
+                <button
+                    onClick={() => {
+                        if (repositoriesToDisplay.length > 0) {
+                            setSelectedRepoForSetup(repositoriesToDisplay[0]);
+                            setIsSetupCommandsModalOpen(true);
+                        }
+                    }}
+                    className="px-4 py-2 bg-accent hover:bg-accent/80 text-white rounded-md flex items-center gap-2"
+                    disabled={repositoriesToDisplay.length === 0}
+                >
+                    <span>Generate Setup Commands</span>
+                </button>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
             {repositoriesToDisplay.map(repo => (
                 <ProjectCard 
@@ -633,6 +659,8 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
                       setPromptRepo(r);
                       setPromptMode('info');
                     }}
+                    isPinned={isProjectPinned(repo.id)}
+                    onTogglePin={() => toggleProjectPin(repo)}
                 />
             ))}
             </div>
@@ -655,6 +683,7 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
           onSelectView={setView}
           onOpenManageListsModal={() => setIsManageListsModalOpen(true)}
           onOpenSettingsModal={() => setIsSettingsModalOpen(true)}
+          onOpenSyncManagementModal={() => setIsSyncManagementModalOpen(true)}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           isCollapsed={isSidebarCollapsed}
@@ -763,6 +792,18 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
         onClose={() => setIsSettingsModalOpen(false)}
         onSave={handleSaveSettings}
         currentToken={githubToken}
+      />
+      <SyncManagementModal
+        isOpen={isSyncManagementModalOpen}
+        onClose={() => setIsSyncManagementModalOpen(false)}
+        repositories={allRepositories}
+        syncSettings={syncSettings}
+        onToggleSync={(repo) => handleToggleSync(repo.full_name, !syncSettings[repo.full_name])}
+      />
+      <SetupCommandsModal
+        isOpen={isSetupCommandsModalOpen}
+        onClose={() => setIsSetupCommandsModalOpen(false)}
+        repository={selectedRepoForSetup}
       />
     </div>
   );

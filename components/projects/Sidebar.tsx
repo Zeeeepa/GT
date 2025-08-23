@@ -6,6 +6,7 @@ import { ChevronDoubleRightIcon } from '../shared/icons/ChevronDoubleRightIcon';
 import { ListBulletIcon } from '../shared/icons/ListBulletIcon';
 import { GithubIcon } from '../shared/icons/GithubIcon';
 import { SearchIcon } from '../shared/icons/SearchIcon';
+import { CogIcon } from '../shared/icons/CogIcon';
 
 interface SidebarProps {
   lists: (ProjectList & { item_count: number })[];
@@ -13,6 +14,7 @@ interface SidebarProps {
   onSelectView: (view: ProjectView) => void;
   onOpenManageListsModal: () => void;
   onOpenSettingsModal: () => void;
+  onOpenSyncManagementModal?: () => void;
   isCollapsed: boolean;
   onToggle: () => void;
   width: number;
@@ -56,7 +58,7 @@ const NavButton: React.FC<{
 
 
 const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(({ 
-  lists, activeView, onSelectView, onOpenManageListsModal, onOpenSettingsModal,
+  lists, activeView, onSelectView, onOpenManageListsModal, onOpenSettingsModal, onOpenSyncManagementModal,
   isCollapsed, onToggle, width, onResizeStart, isResizing,
   draggedOverListId, onDrop, onDragOver, onDragEnter, onDragLeave,
   searchQuery, onSearchChange
@@ -69,13 +71,27 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(({
       className={`relative flex flex-col shrink-0 bg-secondary border-r border-border-color ${isResizing ? '' : 'transition-width duration-300 ease-in-out'}`}
     >
       <header className="flex items-center p-4 border-b border-border-color shrink-0">
-        <button 
+        <div className={`flex ${isCollapsed ? 'flex-col space-y-2 items-center' : 'space-x-2 items-center'}`}>
+          <button 
             onClick={onOpenSettingsModal} 
-            className={`p-1 rounded-md hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-secondary focus:ring-accent transition-all duration-300 ${isCollapsed ? 'mx-auto' : ''}`} 
-            aria-label="Open settings"
-        >
-          <GithubIcon className="w-8 h-8 text-text-primary" />
-        </button>
+            className={`p-1 rounded-md hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-secondary focus:ring-accent transition-all duration-300`} 
+            aria-label="GitHub Settings"
+            title="GitHub Settings"
+          >
+            <GithubIcon className="w-8 h-8 text-text-primary" />
+          </button>
+          
+          {onOpenSyncManagementModal && (
+            <button 
+              onClick={onOpenSyncManagementModal} 
+              className={`p-1 rounded-md hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-secondary focus:ring-accent transition-all duration-300`} 
+              aria-label="Sync Management"
+              title="Sync Management"
+            >
+              <CogIcon className="w-8 h-8 text-text-primary" />
+            </button>
+          )}
+        </div>
       </header>
       
       <div className={`p-4 border-b border-border-color shrink-0 ${isCollapsed ? 'hidden' : ''}`}>
@@ -168,3 +184,4 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(({
 });
 
 export default Sidebar;
+
