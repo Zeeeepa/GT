@@ -260,19 +260,19 @@ const RunListItem: React.FC<{
   const getStatusColor = (status: AgentRunStatus) => {
     switch (status) {
       case AgentRunStatus.COMPLETED:
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-500/20 text-green-400';
       case AgentRunStatus.RUNNING:
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-blue-500/20 text-blue-400';
       case AgentRunStatus.FAILED:
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-500/20 text-red-400';
       case AgentRunStatus.PENDING:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-yellow-500/20 text-yellow-400';
       case AgentRunStatus.CANCELLED:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-500/20 text-gray-400';
       case AgentRunStatus.PAUSED:
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-orange-500/20 text-orange-400';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-500/20 text-gray-400';
     }
   };
 
@@ -298,7 +298,7 @@ const RunListItem: React.FC<{
                 {run.status}
               </span>
               {run.source_type && (
-                <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                <span className="inline-flex items-center px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs font-medium">
                   {run.source_type}
                 </span>
               )}

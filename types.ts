@@ -1,4 +1,3 @@
-
 // --- Project Catalog Types ---
 
 export interface ProjectRepository {
@@ -28,6 +27,12 @@ export interface ProjectList {
   id: string;
   name: string;
   color?: string;
+}
+
+export interface OrganizationResponse {
+  id: number;
+  name: string;
+  slug: string;
 }
   
 export type ProjectView = { type: 'all' } | { type: 'list'; list: ProjectList & { item_count?: number } };
@@ -245,6 +250,20 @@ export interface Repository {
   updated_at?: string;
 }
 
+export interface CodegenRepository {
+  id: number;
+  name: string;
+  full_name: string;
+  private: boolean;
+  url: string;
+  owner: string;
+  description?: string;
+  language?: string;
+  stars?: number;
+  forks?: number;
+  updated_at?: string;
+}
+
 export interface GithubPullRequest {
   id: number;
   title: string;
@@ -267,7 +286,16 @@ export interface AgentRun {
   metadata?: Record<string, any>;
   prompt?: string;
   user_id?: number;
+  steps?: Array<{
+    id: string;
+    name: string;
+    status: 'completed' | 'failed' | 'running' | 'pending';
+    output?: string;
+  }>;
 }
+
+// Type alias for cached agent runs
+export type CachedAgentRun = AgentRun;
 
 export interface AgentRunLog {
   agent_run_id: number;
@@ -334,6 +362,7 @@ export interface CreateAgentRunRequest {
   prompt: string;
   images?: string[];
   metadata?: Record<string, any>;
+  repo_id?: number;
 }
 
 export interface ResumeAgentRunRequest {
@@ -345,4 +374,8 @@ export interface ResumeAgentRunRequest {
 export interface PaginationParams {
   skip?: number;
   limit?: number;
+}
+
+export interface StopAgentRunRequest {
+  agent_run_id: number;
 }

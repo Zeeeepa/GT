@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ProjectRepository, ProjectList, ProjectView } from '../../types';
 import { 
@@ -11,6 +10,7 @@ import {
 import { getCodegenService } from '../../services/codegenService';
 import { AgentRunStatus } from '../../types';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { usePinnedItems } from '../../hooks/usePinnedItems';
 import ProjectCard from './ProjectCard';
 import { ChatIcon } from '../shared/icons/ChatIcon';
 import ConfirmationModal from '../shared/ConfirmationModal';
@@ -21,14 +21,15 @@ import { EyeIcon } from '../shared/icons/EyeIcon';
 import { EyeSlashIcon } from '../shared/icons/EyeSlashIcon';
 import SettingsModal from './SettingsModal';
 import ProjectPromptModal from './ProjectPromptModal';
+import SetupCommandsModal from './SetupCommandsModal';
+import SyncManagementModal from './SyncManagementModal';
+import GenerateSetupCommands from './GenerateSetupCommands';
 
-interface ProjectsViewProps {
-    githubToken: string;
-    setGithubToken: (token: string) => void;
-    githubApiUrl: string;
-}
+interface ProjectsViewProps {}
 
-export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl }: ProjectsViewProps) {
+export default function ProjectsView({}: ProjectsViewProps) {
+  const [githubToken, setGithubToken] = useLocalStorage<string>('githubToken', '');
+  const [githubApiUrl] = useLocalStorage<string>('githubApiUrl', 'https://api.github.com');
   const [allRepositories, setAllRepositories] = useState<ProjectRepository[]>([]);
   const [repositoriesToDisplay, setRepositoriesToDisplay] = useState<ProjectRepository[]>([]);
   
@@ -45,6 +46,9 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
 
   const [isManageListsModalOpen, setIsManageListsModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isSyncManagementModalOpen, setIsSyncManagementModalOpen] = useState(false);
+  const [isSetupCommandsModalOpen, setIsSetupCommandsModalOpen] = useState(false);
+  const [selectedRepoForSetup, setSelectedRepoForSetup] = useState<ProjectRepository | null>(null);
 
   const [draggedOverListId, setDraggedOverListId] = useState<string | null>(null);
 
@@ -60,6 +64,13 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
   const [promptMode, setPromptMode] = useState<'chat' | 'info' | null>(null);
   const [codegenRepos, setCodegenRepos] = useState<Record<string, { id: number }>>({});
   const [projectPendingRuns, setProjectPendingRuns] = useLocalStorage<Record<string, number[]>>('projectPendingRuns', {});
+  
+  // Use the pinned items hook
+  const { 
+    pinnedProjects, 
+    toggleProjectPin, 
+    isProjectPinned 
+  } = usePinnedItems();
 
   // Sidebar resizing logic
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useLocalStorage('sidebarCollapsed', false);
@@ -136,13 +147,17 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
   }, []);
 
   const fetchInitialData = useCallback(async (token: string, apiUrl: string) => {
+    console.log("Fetching initial data with token:", token ? "Token provided" : "No token");
     setLoading('Fetching your GitHub repositories...');
     setPageError(null);
     try {
+      console.log("Calling fetchRepositories...");
       const fetchedRepos = await fetchRepositories(apiUrl, token);
+      console.log("Repositories fetched:", fetchedRepos.length);
       setAllRepositories(fetchedRepos);
       setView({ type: 'all' });
     } catch (err) {
+      console.error("Error fetching repositories:", err);
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
       if (err instanceof GithubApiError && (err.status === 401 || err.status === 403)) {
          setPageError('Configuration error: Your GitHub token is invalid, has expired, or lacks necessary permissions. Please check your token and its permissions.');
@@ -167,7 +182,11 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
   useEffect(() => {
     const loadCodegenRepos = async () => {
       try {
-        const repos = await getCodegenService().getRepositories();
+        console.log("Getting Codegen service...");
+        const service = getCodegenService();
+        console.log("Fetching repositories...");
+        const repos = await service.getRepositories();
+        console.log("Repositories fetched:", repos);
         const map: Record<string, { id: number }> = {};
         for (const r of repos) {
           const key = (r as any).full_name || r.name; // API returns full_name per docs
@@ -175,6 +194,7 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
         }
         setCodegenRepos(map);
       } catch (e) {
+        console.error("Error loading Codegen repositories:", e);
         // ignore if Codegen creds not set
       }
     };
@@ -184,7 +204,14 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
   // Poll Codegen for pending run completion per project, update notifications
   useEffect(() => {
     let cancelled = false;
-    const service = getCodegenService();
+    let service;
+    
+    try {
+      service = getCodegenService();
+    } catch (error) {
+      console.error("Error getting Codegen service:", error);
+      return;
+    }
 
     const checkPending = async () => {
       const updated: Record<string, number[]> = {};
@@ -605,6 +632,17 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
 
     return (
         <>
+            <div className="flex justify-between mb-4">
+                <h2 className="text-xl font-semibold">Projects</h2>
+                <div className="flex space-x-2">
+                    {repositoriesToDisplay.length > 0 && (
+                      <GenerateSetupCommands 
+                        projectId={repositoriesToDisplay[0].id} 
+                        organizationId={repositoriesToDisplay[0].owner?.id || 0} 
+                      />
+                    )}
+                </div>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
             {repositoriesToDisplay.map(repo => (
                 <ProjectCard 
@@ -633,6 +671,8 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
                       setPromptRepo(r);
                       setPromptMode('info');
                     }}
+                    isPinned={isProjectPinned(repo.id)}
+                    onTogglePin={() => toggleProjectPin(repo)}
                 />
             ))}
             </div>
@@ -655,6 +695,7 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
           onSelectView={setView}
           onOpenManageListsModal={() => setIsManageListsModalOpen(true)}
           onOpenSettingsModal={() => setIsSettingsModalOpen(true)}
+          onOpenSyncManagementModal={() => setIsSyncManagementModalOpen(true)}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           isCollapsed={isSidebarCollapsed}
@@ -763,6 +804,18 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
         onClose={() => setIsSettingsModalOpen(false)}
         onSave={handleSaveSettings}
         currentToken={githubToken}
+      />
+      <SyncManagementModal
+        isOpen={isSyncManagementModalOpen}
+        onClose={() => setIsSyncManagementModalOpen(false)}
+        repositories={allRepositories}
+        syncSettings={syncSettings}
+        onToggleSync={(repo) => handleToggleSync(repo.full_name, !syncSettings[repo.full_name])}
+      />
+      <SetupCommandsModal
+        isOpen={isSetupCommandsModalOpen}
+        onClose={() => setIsSetupCommandsModalOpen(false)}
+        repository={selectedRepoForSetup}
       />
     </div>
   );

@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { JSX } from 'react';
 import { SearchGithubRepo, SearchGithubCodeItem, SearchGithubUser, NpmPackage, GroupedCodeResult } from '../../types';
 import { StarIcon } from '../shared/icons/StarIcon';
 import { RepoForkedIcon } from '../shared/icons/RepoForkedIcon';

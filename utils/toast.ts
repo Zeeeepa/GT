@@ -4,6 +4,7 @@ export enum ToastStyle {
   Success = "success",
   Failure = "failure",
   Warning = "warning",
+  Information = "information",
 }
 
 export interface ToastOptions {
@@ -25,7 +26,10 @@ export function showToast(options: ToastOptions): void {
       toast.error(fullMessage, { duration });
       break;
     case ToastStyle.Warning:
-      toast.warn(fullMessage, { duration });
+      toast(fullMessage, { duration, icon: '⚠️' });
+      break;
+    case ToastStyle.Information:
+      toast(fullMessage, { duration, icon: 'ℹ️' });
       break;
     default:
       toast(fullMessage, { duration });

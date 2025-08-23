@@ -69,7 +69,7 @@ const CreateAgentRunModal: React.FC<CreateAgentRunModalProps> = ({ onClose, onSu
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+    const files = Array.from(e.target.files || []) as File[];
     processImageFiles(files);
   };
 
@@ -77,8 +77,8 @@ const CreateAgentRunModal: React.FC<CreateAgentRunModalProps> = ({ onClose, onSu
     e.preventDefault();
     setDragOver(false);
     
-    const files = Array.from(e.dataTransfer.files);
-    const imageFiles = files.filter(file => file.type.startsWith('image/'));
+    const files = Array.from(e.dataTransfer.files) as File[];
+    const imageFiles = files.filter(file => typeof file.type === 'string' && file.type.startsWith('image/'));
     processImageFiles(imageFiles);
   };
 

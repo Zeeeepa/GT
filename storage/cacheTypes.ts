@@ -1,4 +1,7 @@
-import { AgentRunResponse, OrganizationResponse, UserResponse, TrackedAgentRun } from "../types";
+import { AgentRun, Organization, User } from "../types";
+
+// Alias for backward compatibility
+export type CachedAgentRun = AgentRun;
 
 // Cache Keys
 export const CACHE_KEYS = {
@@ -24,15 +27,15 @@ export interface CacheEntry<T> {
   version: string;
 }
 
-export interface AgentRunCacheEntry extends CacheEntry<AgentRunResponse> {
+export interface AgentRunCacheEntry extends CacheEntry<AgentRun> {
   organizationId: number;
 }
 
-export interface OrganizationCacheEntry extends CacheEntry<OrganizationResponse> {
+export interface OrganizationCacheEntry extends CacheEntry<Organization> {
   isDefault?: boolean;
 }
 
-export interface UserCacheEntry extends CacheEntry<UserResponse> {
+export interface UserCacheEntry extends CacheEntry<User> {
   organizationId: number;
 }
 
@@ -81,6 +84,6 @@ export interface SyncState {
 }
 
 // Tracked Agent Run Cache Entry
-export interface TrackedAgentRunCacheEntry extends CacheEntry<TrackedAgentRun> {
+export interface TrackedAgentRunCacheEntry extends CacheEntry<CachedAgentRun> {
   organizationId: number;
 }

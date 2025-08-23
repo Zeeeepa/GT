@@ -1,25 +1,43 @@
 import { showToast, ToastStyle } from "./toast";
 import { LocalStorage } from "./storage";
 import { storeUserInfo, clearStoredUserInfo, isStoredUserInfoValid, getStoredUserInfo } from "../storage/userStorage";
-import { UserResponse, OrganizationResponse } from "../types";
+import { User, Organization } from "../types";
 import { getAPIClient } from '../services/codegenApiService';
 
 export interface Preferences {
   apiToken: string;
   defaultOrganization?: string;
+  githubToken?: string;
 }
 
 export interface CredentialsValidationResult {
   isValid: boolean;
   error?: string;
   organizations?: Array<{ id: number; name: string }>;
-  userInfo?: UserResponse;
+  userInfo?: User;
 }
 
 export async function getCredentials(): Promise<Preferences> {
     const apiToken = await LocalStorage.getItem<string>("codegenToken") || '';
     const defaultOrganization = await LocalStorage.getItem<string>("codegenOrgId") || undefined;
-    return { apiToken, defaultOrganization };
+    const githubToken = await LocalStorage.getItem<string>("githubToken") || undefined;
+    return { apiToken, defaultOrganization, githubToken };
+}
+
+export async function saveCredentials(credentials: {
+  githubToken?: string;
+  codegenToken: string;
+  organizationId?: number;
+}): Promise<void> {
+  if (credentials.githubToken !== undefined) {
+    await LocalStorage.setItem("githubToken", credentials.githubToken);
+  }
+  
+  await LocalStorage.setItem("codegenToken", credentials.codegenToken);
+  
+  if (credentials.organizationId !== undefined) {
+    await LocalStorage.setItem("codegenOrgId", credentials.organizationId.toString());
+  }
 }
 
 export async function validateCredentials(): Promise<CredentialsValidationResult> {
@@ -75,7 +93,7 @@ export async function getDefaultOrganizationId(): Promise<number | null> {
     return null;
 }
 
-export async function getCurrentUserInfo(): Promise<UserResponse | null> {
+export async function getCurrentUserInfo(): Promise<User | null> {
     const credentials = await getCredentials();
     if (await isStoredUserInfoValid(credentials.apiToken)) {
         return getStoredUserInfo();

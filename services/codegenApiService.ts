@@ -1,12 +1,13 @@
 import {
-  AgentRunResponse,
-  OrganizationResponse,
+  AgentRun,
+  Organization,
   CreateAgentRunRequest,
-  APIError,
+  ApiError,
   CodegenRepository,
-  UserResponse,
+  User,
   ResumeAgentRunRequest,
   StopAgentRunRequest,
+  SetupCommand,
 } from '../types';
 import { getCredentials, validateCredentials } from '../utils/credentials';
 import { showToast, ToastStyle } from '../utils/toast';
@@ -34,6 +35,10 @@ const API_ENDPOINTS = {
     `/v1/organizations/${organizationId}/agent/run/resume`,
   AGENT_RUN_STOP: (organizationId: number) => 
     `/v1/beta/organizations/${organizationId}/agent/run/stop`,
+  
+  // Setup Commands
+  SETUP_COMMANDS: (organizationId: number | string, projectId: number) =>
+    `/v1/organizations/${organizationId}/setup-commands/generate?project_id=${projectId}`,
 } as const;
 
 
@@ -121,25 +126,25 @@ class CodegenAPIClient {
 
   // --- Agent Run Methods ---
 
-  async createAgentRun(organizationId: string, request: CreateAgentRunRequest): Promise<AgentRunResponse> {
-    return this.makeRequest<AgentRunResponse>(
+  async createAgentRun(organizationId: string, request: CreateAgentRunRequest): Promise<AgentRun> {
+    return this.makeRequest<AgentRun>(
       API_ENDPOINTS.AGENT_RUN_CREATE(organizationId),
       { method: "POST", body: JSON.stringify(request) }
     );
   }
 
-  async getAgentRun(organizationId: string, agentRunId: number): Promise<AgentRunResponse> {
-    return this.makeRequest<AgentRunResponse>(
+  async getAgentRun(organizationId: string, agentRunId: number): Promise<AgentRun> {
+    return this.makeRequest<AgentRun>(
       API_ENDPOINTS.AGENT_RUN_GET(organizationId, agentRunId)
     );
   }
 
-  async resumeAgentRun(organizationId: string, agentRunId: number, request: { prompt: string }): Promise<AgentRunResponse> {
+  async resumeAgentRun(organizationId: string, agentRunId: number, request: { prompt: string }): Promise<AgentRun> {
     const fullRequest: ResumeAgentRunRequest = {
         ...request,
         agent_run_id: agentRunId
     };
-    return this.makeRequest<AgentRunResponse>(
+    return this.makeRequest<AgentRun>(
       API_ENDPOINTS.AGENT_RUN_RESUME(organizationId),
       { 
         method: "POST",
@@ -148,8 +153,8 @@ class CodegenAPIClient {
     );
   }
 
-  async stopAgentRun(organizationId: number, request: StopAgentRunRequest): Promise<AgentRunResponse> {
-    return this.makeRequest<AgentRunResponse>(
+  async stopAgentRun(organizationId: number, request: StopAgentRunRequest): Promise<AgentRun> {
+    return this.makeRequest<AgentRun>(
       API_ENDPOINTS.AGENT_RUN_STOP(organizationId),
       {
         method: "POST",
@@ -160,14 +165,14 @@ class CodegenAPIClient {
   
   // --- Organization & User Methods ---
 
-  async getOrganizations(page = 1, size = 50): Promise<{ items: OrganizationResponse[] }> {
-    return this.makeRequest<{ items: OrganizationResponse[] }>(
+  async getOrganizations(page = 1, size = 50): Promise<{ items: Organization[] }> {
+    return this.makeRequest<{ items: Organization[] }>(
       API_ENDPOINTS.ORGANIZATIONS_PAGINATED(page, size)
     );
   }
 
-  async getMe(): Promise<UserResponse> {
-    return this.makeRequest<UserResponse>(API_ENDPOINTS.USER_ME);
+  async getMe(): Promise<User> {
+    return this.makeRequest<User>(API_ENDPOINTS.USER_ME);
   }
 
 
@@ -180,6 +185,15 @@ class CodegenAPIClient {
     } catch {
       return false;
     }
+  }
+
+  // --- Setup Commands ---
+  
+  async generateSetupCommands(organizationId: string, projectId: number): Promise<SetupCommand[]> {
+    return this.makeRequest<SetupCommand[]>(
+      API_ENDPOINTS.SETUP_COMMANDS(organizationId, projectId),
+      { method: "GET" }
+    );
   }
 }
 

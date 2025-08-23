@@ -1,5 +1,5 @@
 import React from 'react';
-import { AgentRunResponse, AgentRunStatus } from '../../types';
+import { AgentRun, AgentRunStatus } from '../../types';
 import { CheckCircleIcon } from '../shared/icons/CheckCircleIcon';
 import { XCircleIcon } from '../shared/icons/XCircleIcon';
 import { ClockIcon } from '../shared/icons/ClockIcon';
@@ -7,10 +7,10 @@ import { PlayIcon } from '../shared/icons/PlayIcon';
 import LoadingSpinner from '../shared/LoadingSpinner';
 
 interface RunListItemProps {
-    run: AgentRunResponse;
+    run: AgentRun;
     isExpanded: boolean;
     onToggle: () => void;
-    onResume: (run: AgentRunResponse) => void;
+    onResume: (run: AgentRun) => void;
 }
 
 const timeAgo = (dateString: string): string => {
@@ -31,16 +31,16 @@ const timeAgo = (dateString: string): string => {
     return `${Math.floor(seconds)}s ago`;
 };
 
-const StatusBadge: React.FC<{ status: AgentRunResponse['status'] }> = ({ status }) => {
+const StatusBadge: React.FC<{ status: AgentRun['status'] }> = ({ status }) => {
     const s = status ? status.toLowerCase() : 'unknown';
     const styles: Record<string, string> = {
         [AgentRunStatus.PENDING.toLowerCase()]: 'bg-gray-500/20 text-gray-400',
-        [AgentRunStatus.ACTIVE.toLowerCase()]: 'bg-blue-500/20 text-blue-400 animate-pulse',
         'running': 'bg-blue-500/20 text-blue-400 animate-pulse',
-        [AgentRunStatus.COMPLETE.toLowerCase()]: 'bg-green-500/20 text-green-400',
+        [AgentRunStatus.RUNNING.toLowerCase()]: 'bg-blue-500/20 text-blue-400 animate-pulse',
         'completed': 'bg-green-500/20 text-green-400',
+        [AgentRunStatus.COMPLETED.toLowerCase()]: 'bg-green-500/20 text-green-400',
         [AgentRunStatus.FAILED.toLowerCase()]: 'bg-red-500/20 text-red-400',
-        [AgentRunStatus.ERROR.toLowerCase()]: 'bg-red-500/20 text-red-400',
+        'error': 'bg-red-500/20 text-red-400',
         [AgentRunStatus.PAUSED.toLowerCase()]: 'bg-yellow-500/20 text-yellow-400',
         'requires_action': 'bg-yellow-500/20 text-yellow-400',
         [AgentRunStatus.CANCELLED.toLowerCase()]: 'bg-gray-700/30 text-gray-500',
@@ -53,7 +53,7 @@ const StatusBadge: React.FC<{ status: AgentRunResponse['status'] }> = ({ status 
     );
 };
 
-const StepIcon = ({ status }: { status: NonNullable<AgentRunResponse['steps']>[0]['status'] }) => {
+const StepIcon = ({ status }: { status: NonNullable<AgentRun['steps']>[0]['status'] }) => {
     switch (status) {
         case 'completed': return <CheckCircleIcon className="w-5 h-5 text-success"/>;
         case 'failed': return <XCircleIcon className="w-5 h-5 text-danger"/>;
@@ -109,13 +109,13 @@ const RunListItem: React.FC<RunListItemProps> = ({ run, isExpanded, onToggle, on
                             </li>
                         ))}
                     </ul>
-                    {run.status.toUpperCase() === AgentRunStatus.COMPLETE && run.result && (
+                    {run.status?.toUpperCase() === AgentRunStatus.COMPLETED && run.result && (
                         <div>
                             <h4 className="font-semibold text-sm mb-2">Result</h4>
                             <div className="bg-primary p-3 rounded-md text-sm whitespace-pre-wrap border border-border-color/50">{run.result}</div>
                         </div>
                     )}
-                     {run.status.toUpperCase() === AgentRunStatus.FAILED && (
+                     {run.status?.toUpperCase() === AgentRunStatus.FAILED && (
                         <div>
                             <h4 className="font-semibold text-sm mb-2 text-danger">Failure Details</h4>
                             <div className="bg-primary p-3 rounded-md text-sm whitespace-pre-wrap border border-danger/50 text-danger/90">

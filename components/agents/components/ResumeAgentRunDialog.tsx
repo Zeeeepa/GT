@@ -23,7 +23,15 @@ export const ResumeAgentRunDialog: React.FC<ResumeAgentRunDialogProps> = ({ isOp
     }
     setIsResuming(true);
     try {
-      await apiClient.resumeAgentRun(organizationId.toString(), agentRunId, { prompt });
+      // Get project context from localStorage if available
+      const projectContext = localStorage.getItem(`agent-run-${agentRunId}-project`);
+      let contextualPrompt = prompt.trim();
+      
+      if (projectContext) {
+        contextualPrompt = `The project is '${projectContext}'. ${contextualPrompt}`;
+      }
+      
+      await apiClient.resumeAgentRun(organizationId.toString(), agentRunId, { prompt: contextualPrompt });
       toast.success(`Agent run #${agentRunId} resumed successfully.`);
       await onResumed();
       onClose();

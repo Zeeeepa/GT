@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { ProjectList } from '../types';
 import HueSlider from './shared/HueSlider';
@@ -197,7 +196,11 @@ const ManageListsModal: React.FC<ManageListsModalProps> = ({ isOpen, onClose, li
                     <h3 className="font-semibold text-text-primary mb-3">Existing Lists</h3>
                     <div className="max-h-60 overflow-y-auto pr-2 space-y-2">
                         {lists.length > 0 ? (
-                            [...lists].sort((a,b) => a.name.localeCompare(b.name)).map(list => <ListItem key={list.id} list={list} />)
+                            [...lists].sort((a,b) => a.name.localeCompare(b.name)).map(list => (
+                                <div key={list.id}>
+                                    <ListItem list={list} />
+                                </div>
+                            ))
                         ) : (
                             <p className="text-text-secondary text-center py-4">You have no lists yet.</p>
                         )}
