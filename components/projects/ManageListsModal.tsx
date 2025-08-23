@@ -30,13 +30,15 @@ interface ManageListsModalProps {
   lists: ProjectList[];
   repoListMembership: Record<string, string[]>;
   syncSettings: Record<string, boolean>;
+  codegenRepoIds?: Record<string, number>;
+  projectNotifications?: Record<string, number>;
   onConfirmDelete: (list: ProjectList) => void;
   onEditList: (listId: string, newName: string, newColor: string) => void;
   onCreateList: (name: string, color: string) => void;
-  onImportData: (data: { lists: ProjectList[], repoListMembership: Record<string, string[]>, syncSettings?: Record<string, boolean> }) => void;
+  onImportData: (data: { lists: ProjectList[], repoListMembership: Record<string, string[]>, syncSettings?: Record<string, boolean>, codegenRepoIds?: Record<string, number>, projectNotifications?: Record<string, number> }) => void;
 }
 
-const ManageListsModal: React.FC<ManageListsModalProps> = ({ isOpen, onClose, lists, repoListMembership, syncSettings, onConfirmDelete, onEditList, onCreateList, onImportData }) => {
+const ManageListsModal: React.FC<ManageListsModalProps> = ({ isOpen, onClose, lists, repoListMembership, syncSettings, codegenRepoIds, projectNotifications, onConfirmDelete, onEditList, onCreateList, onImportData }) => {
     const [editingListId, setEditingListId] = useState<string | null>(null);
     const [currentName, setCurrentName] = useState('');
     const [currentHue, setCurrentHue] = useState(210);
@@ -84,7 +86,8 @@ const ManageListsModal: React.FC<ManageListsModalProps> = ({ isOpen, onClose, li
     };
 
     const handleExportClick = () => {
-        const dataStr = JSON.stringify({ lists, repoListMembership, syncSettings }, null, 2);
+        const data = { lists, repoListMembership, syncSettings, codegenRepoIds: codegenRepoIds || {}, projectNotifications: projectNotifications || {} };
+        const dataStr = JSON.stringify(data, null, 2);
         const dataBlob = new Blob([dataStr], { type: "application/json" });
         const url = URL.createObjectURL(dataBlob);
         const link = document.createElement("a");

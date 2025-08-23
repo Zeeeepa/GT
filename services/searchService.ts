@@ -2,11 +2,9 @@
 import type { SearchParams, SearchResult, NpmPackage, NpmPackageDetail, FileNode, TrendingDateRange, SearchGithubRepo, SearchGithubCodeItem } from '../types';
 import { searchNpmPackagesEnhanced } from './npmEnhancedSearch';
 
-const GITHUB_API_BASE_URL = '/api/github/search';
-const GITHUB_REPOS_API_BASE_URL = '/api/github/repos';
-const NPM_API_BASE_URL = '/api/npm';
-const JSDELIVR_API_BASE_URL = '/api/jsdelivr/v1/packages/npm';
-
+const GITHUB_API_BASE_URL = 'https://api.github.com/search';
+const NPM_API_BASE_URL = 'https://registry.npmjs.org';
+const JSDELIVR_API_BASE_URL = 'https://data.jsdelivr.com/v1/packages/npm';
 
 // --- GitHub Service ---
 
@@ -163,7 +161,7 @@ async function getReadmeContent(owner: string, repoName: string, token: string |
         headers['Authorization'] = `token ${token}`;
     }
     try {
-        const response = await fetch(`${GITHUB_REPOS_API_BASE_URL}/${owner}/${repoName}/readme`, { headers });
+        const response = await fetch(`https://api.github.com/repos/${owner}/${repoName}/readme`, { headers });
         if (!response.ok) {
             // README might not exist or be private, which is fine for filtering.
             return ""; 
@@ -194,7 +192,7 @@ async function checkCodeForChinese(repoFullName: string, token: string | null): 
     const queryParams = new URLSearchParams({ q: query, per_page: '1' });
 
     try {
-        const response = await fetch(`${GITHUB_API_BASE_URL}/code?${queryParams}`, { headers });
+        const response = await fetch(`https://api.github.com/search/code?${queryParams}`, { headers });
         if (!response.ok) {
             // Log non-critical errors (like rate limits) and continue.
             console.warn(`Code search failed for ${repoFullName} with status: ${response.status}`);
@@ -254,7 +252,7 @@ export const getRepoDetails = async (fullName: string, token: string | null): Pr
         headers['Authorization'] = `token ${token}`;
     }
     try {
-        const response = await fetch(`${GITHUB_REPOS_API_BASE_URL}/${fullName}`, { headers });
+        const response = await fetch(`https://api.github.com/repos/${fullName}`, { headers });
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
             throw new Error(errorData.message || `Failed to fetch repo details for ${fullName}: ${response.status}`);
@@ -272,12 +270,12 @@ export const getRepoDetails = async (fullName: string, token: string | null): Pr
 export const searchNpmPackages = async (params: SearchParams): Promise<{ packages: NpmPackage[], total: number }> => {
     const { query, limit, startDate, endDate, sort } = params;
     const trimmedQuery = query.trim();
-    if (!trimmedQuery) return { packages: [], total: 0 };
+    if (!trimmedQuery) return [];
 
     // NPM API limit is 250
     // For sorting, fetch more results to get a better sample for sorting
     const baseFetchSize = Math.min(limit, 250);
-    const fetchSize = sort ? Math.min(baseFetchSize * 3, 250) : baseFetchSize;
+    const fetchSize = sort && sort !== '' ? Math.min(baseFetchSize * 3, 250) : baseFetchSize;
 
     const queryParams = new URLSearchParams({
         text: trimmedQuery,
@@ -360,7 +358,7 @@ export const searchNpmPackages = async (params: SearchParams): Promise<{ package
         }
 
         // Apply sorting if specified
-        if (sort) {
+        if (sort && sort !== '') {
             allPackages = sortNpmPackages(allPackages, sort);
         }
 

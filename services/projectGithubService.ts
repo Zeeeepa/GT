@@ -1,7 +1,5 @@
 import { ProjectRepository } from '../types';
 
-const GITHUB_API_BASE_URL = '/api/github';
-
 export class GithubApiError extends Error {
     constructor(message: string, public status: number) {
         super(message);
@@ -38,22 +36,20 @@ async function paginatedFetch<T>(url: string, token: string, allItems: T[] = [])
         if (nextLink) {
             const nextUrl = nextLink.match(/<(.+)>/)?.[1];
             if (nextUrl) {
-                // The nextUrl from GitHub is absolute, so we need to make it relative to our proxy
-                const relativeUrl = nextUrl.replace('https://api.github.com', GITHUB_API_BASE_URL);
-                return paginatedFetch(relativeUrl, token, combinedItems);
+                return paginatedFetch(nextUrl, token, combinedItems);
             }
         }
     }
     return combinedItems;
 }
 
-export async function fetchRepositories(token: string): Promise<ProjectRepository[]> {
-    const initialUrl = `${GITHUB_API_BASE_URL}/user/repos?type=owner&per_page=100&sort=updated`;
+export async function fetchRepositories(apiUrl: string, token: string): Promise<ProjectRepository[]> {
+    const initialUrl = `${apiUrl}/user/repos?type=owner&per_page=100&sort=updated`;
     return paginatedFetch<ProjectRepository>(initialUrl, token);
 }
 
-export async function deleteRepository(owner: string, repoName: string, token: string): Promise<void> {
-  const url = `${GITHUB_API_BASE_URL}/repos/${owner}/${repoName}`;
+export async function deleteRepository(apiUrl: string, owner: string, repoName: string, token: string): Promise<void> {
+  const url = `${apiUrl}/repos/${owner}/${repoName}`;
   const response = await fetch(url, {
     method: 'DELETE',
     mode: 'cors',
@@ -66,8 +62,8 @@ export async function deleteRepository(owner: string, repoName: string, token: s
   }
 }
 
-export async function syncFork(owner: string, repoName: string, branch: string, token: string): Promise<any> {
-  const url = `${GITHUB_API_BASE_URL}/repos/${owner}/${repoName}/merge-upstream`;
+export async function syncFork(apiUrl: string, owner: string, repoName: string, branch: string, token: string): Promise<any> {
+  const url = `${apiUrl}/repos/${owner}/${repoName}/merge-upstream`;
   const response = await fetch(url, {
     method: 'POST',
     mode: 'cors',
@@ -86,4 +82,21 @@ export async function syncFork(owner: string, repoName: string, branch: string, 
   }
 
   return responseBody;
+}
+
+export async function getBehindStatus(
+  apiUrl: string,
+  token: string,
+  forkOwner: string,
+  forkRepo: string,
+  parentFullName: string,
+  branch: string
+): Promise<{ ahead_by: number; behind_by: number }> {
+  // Compare upstream (base) to fork (head): base...head
+  const url = `${apiUrl}/repos/${parentFullName}/compare/${encodeURIComponent(branch)}...${forkOwner}:${encodeURIComponent(branch)}`;
+  const headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' };
+  const response = await fetch(url, { headers, mode: 'cors' });
+  const data = await handleResponse(response);
+  // data has ahead_by (head ahead of base), behind_by (head behind base)
+  return { ahead_by: data.ahead_by ?? 0, behind_by: data.behind_by ?? 0 };
 }

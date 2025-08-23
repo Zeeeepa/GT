@@ -111,7 +111,7 @@ const SearchView: React.FC<SearchViewProps> = ({ githubToken, setGithubToken }) 
                         setTotalCount(npmResults.total);
                     }
                 } else {
-                    if (fullParams.sort) {
+                    if (fullParams.sort && fullParams.sort !== '') {
                         setLoadingMessage(`Searching and sorting by ${fullParams.sort === 'package-size' ? 'biggest files' : 'newest updated'}...`);
                     } else {
                         setLoadingMessage('Searching...');

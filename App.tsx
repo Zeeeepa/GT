@@ -3,33 +3,16 @@ import ProjectsView from './components/projects/ProjectsView';
 import SearchView from './components/search/SearchView';
 import AgentsView from './components/agents/AgentsView';
 import { useLocalStorage } from './hooks/useLocalStorage';
-import { AgentRunSelectionProvider } from './components/agents/contexts/AgentRunSelectionContext';
-import { DialogProvider } from './components/agents/contexts/DialogContext';
-import { Toaster } from 'react-hot-toast';
-
 
 type Mode = 'projects' | 'search' | 'agents';
 
 const App = () => {
-  const [mode, setMode] = useState<Mode>('agents');
+  const [mode, setMode] = useState<Mode>('projects');
   const [githubToken, setGithubToken] = useLocalStorage<string>('githubToken', '');
-  // Codegen credentials are now managed within the Agents tab's components and utils,
-  // but we keep them here in case other parts of the app need them in the future.
-  const [codegenOrgId, setCodegenOrgId] = useLocalStorage<string>('codegenOrgId', '');
-  const [codegenToken, setCodegenToken] = useLocalStorage<string>('codegenToken', '');
+  const [githubApiUrl, setGithubApiUrl] = useLocalStorage<string>('githubApiUrl', 'https://api.github.com');
 
   return (
     <div className="h-screen w-screen flex flex-col bg-primary text-text-primary overflow-hidden">
-       <Toaster
-        position="top-center"
-        toastOptions={{
-          style: {
-            background: '#21262D', // tertiary
-            color: '#C9D1D9', // text-primary
-            border: `1px solid #30363D`, // border-color
-          },
-        }}
-      />
       <header className="flex-shrink-0 bg-secondary border-b border-border-color z-30">
         <div className="flex items-center justify-center px-4">
             <nav className="flex space-x-2" aria-label="Tabs">
@@ -40,15 +23,9 @@ const App = () => {
         </div>
       </header>
       <div className="flex-1 overflow-hidden">
-        {mode === 'projects' && <ProjectsView githubToken={githubToken} setGithubToken={setGithubToken} />}
+        {mode === 'projects' && <ProjectsView githubToken={githubToken} setGithubToken={setGithubToken} githubApiUrl={githubApiUrl} />}
         {mode === 'search' && <SearchView githubToken={githubToken} setGithubToken={setGithubToken} />}
-        {mode === 'agents' && (
-          <AgentRunSelectionProvider>
-            <DialogProvider>
-              <AgentsView />
-            </DialogProvider>
-          </AgentRunSelectionProvider>
-        )}
+        {mode === 'agents' && <AgentsView />}
       </div>
     </div>
   );

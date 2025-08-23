@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { setCodegenCredentials, getRuntimeCodegenCredentials } from '../../services/codegenService';
 import { EyeIcon } from '../shared/icons/EyeIcon';
 import { EyeSlashIcon } from '../shared/icons/EyeSlashIcon';
 
@@ -12,11 +13,16 @@ interface SettingsModalProps {
 const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onSave, currentToken }) => {
   const [tokenInput, setTokenInput] = useState('');
   const [isTokenVisible, setIsTokenVisible] = useState(false);
+  const [codegenToken, setCodegenToken] = useState('');
+  const [codegenOrgId, setCodegenOrgId] = useState('');
 
   useEffect(() => {
     if (isOpen) {
       setTokenInput(currentToken);
       setIsTokenVisible(false);
+      const creds = getRuntimeCodegenCredentials();
+      setCodegenToken(creds.api_token || '');
+      setCodegenOrgId(creds.org_id || '');
     }
   }, [isOpen, currentToken]);
 
@@ -24,6 +30,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onSave, 
 
   const handleSave = () => {
     onSave(tokenInput.trim());
+    // Persist Codegen credentials to localStorage and refresh client
+    setCodegenCredentials(codegenToken.trim(), codegenOrgId.trim());
     onClose();
   };
 
@@ -33,7 +41,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onSave, 
         <div className="p-6">
           <h2 className="text-xl font-bold text-text-primary mb-4">Settings</h2>
           <p className="text-sm text-text-secondary mb-6">
-            Manage your GitHub Personal Access Token. This is stored securely in your browser's local storage.
+            Manage your GitHub & Codegen credentials. Values are stored only in your browser's local storage.
           </p>
           
           <div className="space-y-2">
@@ -62,6 +70,48 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onSave, 
                       )}
                   </button>
               </div>
+          </div>
+
+          <div className="mt-6 space-y-2">
+            <label htmlFor="settings-codegen-org" className="block text-sm font-medium text-text-primary">
+              Codegen Organization ID
+            </label>
+            <input
+              id="settings-codegen-org"
+              type="text"
+              value={codegenOrgId}
+              onChange={(e) => setCodegenOrgId(e.target.value)}
+              className="w-full bg-primary border border-border-color rounded-md px-4 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+              placeholder="org_..."
+            />
+          </div>
+
+          <div className="mt-4 space-y-2">
+            <label htmlFor="settings-codegen-token" className="block text-sm font-medium text-text-primary">
+              Codegen API Token
+            </label>
+            <div className="relative">
+              <input
+                id="settings-codegen-token"
+                type={isTokenVisible ? 'text' : 'password'}
+                value={codegenToken}
+                onChange={(e) => setCodegenToken(e.target.value)}
+                className="w-full bg-primary border border-border-color rounded-md pl-4 pr-10 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                placeholder="cg_..."
+              />
+              <button
+                type="button"
+                onClick={() => setIsTokenVisible(!isTokenVisible)}
+                className="absolute inset-y-0 right-0 px-3 flex items-center text-text-secondary hover:text-text-primary"
+                aria-label={isTokenVisible ? "Hide token" : "Show token"}
+              >
+                {isTokenVisible ? (
+                  <EyeSlashIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
         <div className="bg-tertiary px-6 py-4 flex justify-end items-center space-x-4 rounded-b-lg">

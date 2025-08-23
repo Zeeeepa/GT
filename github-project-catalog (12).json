@@ -1,0 +1,974 @@
+{
+  "lists": [
+    {
+      "id": "a13bcf96-1dda-4096-bc98-dafaac4027d5",
+      "name": "ageny",
+      "color": "hsl(165, 80%, 60%)"
+    },
+    {
+      "id": "ae147083-aaa6-44c7-8efe-0d05036324c4",
+      "name": "BOTS",
+      "color": "hsl(294, 80%, 60%)"
+    },
+    {
+      "id": "47efc2f0-51b6-4015-ba10-8ae7c3e66aa4",
+      "name": "CICD",
+      "color": "hsl(12, 80%, 60%)"
+    },
+    {
+      "id": "7f9f068b-85c0-4a24-87e3-53eab811f6ad",
+      "name": "ClaudeCode",
+      "color": "hsl(8, 80%, 60%)"
+    },
+    {
+      "id": "2cb69b16-53f9-4023-b71f-9bec6a5a3324",
+      "name": "Code-Index",
+      "color": "hsl(298, 80%, 60%)"
+    },
+    {
+      "id": "7d6324d8-2cca-4413-b518-b0328edd1b25",
+      "name": "CodegenApp",
+      "color": "hsl(63, 80%, 60%)"
+    },
+    {
+      "id": "9c2f6ef2-ba20-449c-82f4-f60e1b9075a5",
+      "name": "CONCEPTS",
+      "color": "hsl(83, 80%, 60%)"
+    },
+    {
+      "id": "7baa4ea0-75be-4a28-bf7c-feb8a2536fc7",
+      "name": "CRYPTO",
+      "color": "hsl(63, 80%, 60%)"
+    },
+    {
+      "id": "66d87c02-30d9-4e10-ac41-bd521a4e067d",
+      "name": "DATABASE",
+      "color": "hsl(235, 80%, 60%)"
+    },
+    {
+      "id": "3081ff24-b6be-40d5-bfd1-e39be26eb408",
+      "name": "Freebies",
+      "color": "hsl(208, 80%, 60%)"
+    },
+    {
+      "id": "58366db1-a540-4461-895c-cfdbb558c263",
+      "name": "GAME",
+      "color": "hsl(344, 80%, 60%)"
+    },
+    {
+      "id": "6be7b070-9753-4698-81b4-c636bce4164a",
+      "name": "hacl",
+      "color": "hsl(123, 80%, 60%)"
+    },
+    {
+      "id": "3a6a4d9f-35b1-4cea-92e9-86ba9a29a322",
+      "name": "Llama-Index",
+      "color": "hsl(276, 80%, 60%)"
+    },
+    {
+      "id": "08b14aa3-a07a-43b2-8c88-8121b03a418e",
+      "name": "MAIL",
+      "color": "hsl(32, 80%, 60%)"
+    },
+    {
+      "id": "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae",
+      "name": "MCP",
+      "color": "hsl(240, 80%, 60%)"
+    },
+    {
+      "id": "c1388900-ba10-4640-b621-715c3e4d57e0",
+      "name": "RAG",
+      "color": "hsl(334, 80%, 60%)"
+    },
+    {
+      "id": "31fdce70-3477-4524-82d1-4693bc02e580",
+      "name": "Research",
+      "color": "hsl(0, 80%, 60%)"
+    },
+    {
+      "id": "a1d7da8a-fd11-4941-8753-55c861956e90",
+      "name": "SUPPLEMENTARY",
+      "color": "hsl(100, 80%, 60%)"
+    },
+    {
+      "id": "b003744f-c6f0-4a35-bc1b-b33f84b91172",
+      "name": "TRAINING",
+      "color": "hsl(225, 80%, 60%)"
+    },
+    {
+      "id": "8b122e3d-c189-48d8-a03e-52579097db6d",
+      "name": "UI",
+      "color": "hsl(212, 80%, 60%)"
+    },
+    {
+      "id": "480410cd-a42c-40ff-8d59-132e1081f25a",
+      "name": "VISUALIZE",
+      "color": "hsl(288, 80%, 60%)"
+    },
+    {
+      "id": "635065c6-9fec-4ea3-ab79-635265c2d1a0",
+      "name": "VOICE",
+      "color": "hsl(117, 80%, 60%)"
+    },
+    {
+      "id": "777e96ca-c9f1-45c3-af3e-2112ed7c16b4",
+      "name": "web-browser",
+      "color": "hsl(220, 80%, 60%)"
+    },
+    {
+      "id": "0dd013ec-de87-4db5-8b20-bb8f59e6c574",
+      "name": "web-fetch",
+      "color": "hsl(96, 80%, 60%)"
+    }
+  ],
+  "repoListMembership": {
+    "Zeeeepa/codegenApp": [
+      "7d6324d8-2cca-4413-b518-b0328edd1b25"
+    ],
+    "Zeeeepa/mcp-agent": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/DrissionPage": [
+      "777e96ca-c9f1-45c3-af3e-2112ed7c16b4"
+    ],
+    "Zeeeepa/codegen-ai": [
+      "7d6324d8-2cca-4413-b518-b0328edd1b25"
+    ],
+    "Zeeeepa/web-eval-agent": [
+      "7d6324d8-2cca-4413-b518-b0328edd1b25",
+      "47efc2f0-51b6-4015-ba10-8ae7c3e66aa4"
+    ],
+    "Zeeeepa/create-llama": [
+      "3a6a4d9f-35b1-4cea-92e9-86ba9a29a322"
+    ],
+    "Zeeeepa/workflows-py": [
+      "3a6a4d9f-35b1-4cea-92e9-86ba9a29a322"
+    ],
+    "Zeeeepa/graph-sitter": [
+      "7d6324d8-2cca-4413-b518-b0328edd1b25",
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324",
+      "480410cd-a42c-40ff-8d59-132e1081f25a"
+    ],
+    "Zeeeepa/CodegenCICD": [
+      "7d6324d8-2cca-4413-b518-b0328edd1b25"
+    ],
+    "Zeeeepa/llama_deploy": [
+      "3a6a4d9f-35b1-4cea-92e9-86ba9a29a322"
+    ],
+    "Zeeeepa/EvoAgentX": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/RD-Agent": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/claude-code-router": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/dbview": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/MIRIX": [
+      "8b122e3d-c189-48d8-a03e-52579097db6d"
+    ],
+    "Zeeeepa/cocoindex": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/zen-mcp-server": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/fastapi_mcp": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/lynlang": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/genai-toolbox-mcp": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/SWE-agent": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5",
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/open-swe": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/trae-agent": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/claude-task-master": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/darkdump": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/PayloadsAllTheThings": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/web-check": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/local-operator": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/voltagent": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/adk-python": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/osv-scanner": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/auto-coder.web": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/tsunami-security-scanner": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/sec-gemini": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/serena": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/smolagents": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/claude-code-sdk-python": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/code-graph-rag": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/agno": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/BifrostMCP": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/graphiti": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/MediaCrawler": [
+      "0dd013ec-de87-4db5-8b20-bb8f59e6c574"
+    ],
+    "Zeeeepa/windcode": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/deepwiki-open": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324",
+      "480410cd-a42c-40ff-8d59-132e1081f25a"
+    ],
+    "Zeeeepa/codebase-analytics": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/hackingtool": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/sdk-python": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/grainchain": [
+      "7d6324d8-2cca-4413-b518-b0328edd1b25",
+      "47efc2f0-51b6-4015-ba10-8ae7c3e66aa4"
+    ],
+    "Zeeeepa/adk-samples": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/ottomator-agents": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/mcphub": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/auto-coder": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/ida-pro-mcp": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/Archon": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/dxt": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/mcp-feedback-enhanced": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae",
+      "480410cd-a42c-40ff-8d59-132e1081f25a"
+    ],
+    "Zeeeepa/Bitcoin-wallet-finder": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/tiktok-warmup-bot": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/YouTube-viewbot": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/gmail-gen": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/PyPhisher": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/BlackCap-Grabber-NoDualHook": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/tiktok-bot": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/ZPhisher-Python": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/Blank-Grabber": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/TikTok-viewbot": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/Creal-Stealer": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/python-keylogger": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/KODER-extension": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/aigne-framework": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/Flowise": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/bolt.diy": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/chromancer": [
+      "777e96ca-c9f1-45c3-af3e-2112ed7c16b4"
+    ],
+    "Zeeeepa/atlantis-mcp-server": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/deepwiki-mcp": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/context7": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/maestro": [
+      "0dd013ec-de87-4db5-8b20-bb8f59e6c574"
+    ],
+    "Zeeeepa/GeoSpy": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/ai-web-integration-agent": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/UI-TARS-desktop": [
+      "8b122e3d-c189-48d8-a03e-52579097db6d"
+    ],
+    "Zeeeepa/auto-mcp": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/potpie": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/awesome-llm-apps": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/softwaredesign-llm-application": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/llm-graph-builder": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/supermemory-mcp": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/mcp-chrome": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/WebAgent": [
+      "0dd013ec-de87-4db5-8b20-bb8f59e6c574"
+    ],
+    "Zeeeepa/gmailtail": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/DeepResearchAgent": [
+      "0dd013ec-de87-4db5-8b20-bb8f59e6c574"
+    ],
+    "Zeeeepa/llmware": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/tools": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/mcp-use": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/workflows-mcp-server": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/pr-agent": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/mcpm.sh": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/sambanova-webinar": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/ai-virtual-assistant": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/PAI-RAG": [
+      "c1388900-ba10-4640-b621-715c3e4d57e0"
+    ],
+    "Zeeeepa/Arangodb-graphrag": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/mcp-crawl4ai-rag": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/vibetest-use": [
+      "777e96ca-c9f1-45c3-af3e-2112ed7c16b4"
+    ],
+    "Zeeeepa/MultiAgentPPT": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/claude-code-requirements-builder": [
+      "7f9f068b-85c0-4a24-87e3-53eab811f6ad"
+    ],
+    "Zeeeepa/stresser": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/Bella": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/claude-agents": [
+      "7f9f068b-85c0-4a24-87e3-53eab811f6ad"
+    ],
+    "Zeeeepa/SuperClaude": [
+      "7f9f068b-85c0-4a24-87e3-53eab811f6ad"
+    ],
+    "Zeeeepa/awesome-claude-code": [
+      "7f9f068b-85c0-4a24-87e3-53eab811f6ad"
+    ],
+    "Zeeeepa/codegen-examples": [
+      "7d6324d8-2cca-4413-b518-b0328edd1b25"
+    ],
+    "Zeeeepa/hatch-cython": [
+      "7d6324d8-2cca-4413-b518-b0328edd1b25"
+    ],
+    "Zeeeepa/pink": [
+      "7d6324d8-2cca-4413-b518-b0328edd1b25",
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/ai-goofish-monitor": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/gemini-cli": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/open_codegen": [
+      "7d6324d8-2cca-4413-b518-b0328edd1b25"
+    ],
+    "Zeeeepa/glass": [
+      "8b122e3d-c189-48d8-a03e-52579097db6d"
+    ],
+    "Zeeeepa/moonfy.github.io": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/PandaWiki": [
+      "c1388900-ba10-4640-b621-715c3e4d57e0"
+    ],
+    "Zeeeepa/codegen-api-client": [
+      "7d6324d8-2cca-4413-b518-b0328edd1b25"
+    ],
+    "Zeeeepa/memvid": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/mcp-aas": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/anon-kode": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/codex": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/bloop": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/BYZER-RETRIEVAL": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/CodeFuse-Query": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/CodeFuse-muAgent": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/deep-research": [
+      "31fdce70-3477-4524-82d1-4693bc02e580"
+    ],
+    "Zeeeepa/open_deep_research": [
+      "31fdce70-3477-4524-82d1-4693bc02e580"
+    ],
+    "Zeeeepa/stagehand": [
+      "777e96ca-c9f1-45c3-af3e-2112ed7c16b4"
+    ],
+    "Zeeeepa/gpt-researcher": [
+      "31fdce70-3477-4524-82d1-4693bc02e580"
+    ],
+    "Zeeeepa/arxiver": [
+      "31fdce70-3477-4524-82d1-4693bc02e580"
+    ],
+    "Zeeeepa/MindSearch": [
+      "31fdce70-3477-4524-82d1-4693bc02e580"
+    ],
+    "Zeeeepa/byzer-llm": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/mcp-index": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/wiseflow": [
+      "31fdce70-3477-4524-82d1-4693bc02e580"
+    ],
+    "Zeeeepa/supervision": [
+      "8b122e3d-c189-48d8-a03e-52579097db6d"
+    ],
+    "Zeeeepa/dyad": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/glint": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/gamestudio-subagents": [
+      "58366db1-a540-4461-895c-cfdbb558c263"
+    ],
+    "Zeeeepa/semgrep": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/dinov3": [
+      "b003744f-c6f0-4a35-bc1b-b33f84b91172"
+    ],
+    "Zeeeepa/WeKnora": [
+      "c1388900-ba10-4640-b621-715c3e4d57e0"
+    ],
+    "Zeeeepa/CodeAnalysis": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/line": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/Silent-PDF-Exploit-ZeroTrace-PoC": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/level1-crackmes-solutions": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/Flashloan-Arbitrage-Bot": [
+      "7baa4ea0-75be-4a28-bf7c-feb8a2536fc7"
+    ],
+    "Zeeeepa/DllShimmer": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/gpoParser": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/synapse-bot": [
+      "7baa4ea0-75be-4a28-bf7c-feb8a2536fc7"
+    ],
+    "Zeeeepa/nautilus_trader": [
+      "7baa4ea0-75be-4a28-bf7c-feb8a2536fc7"
+    ],
+    "Zeeeepa/coze-studio": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/ubicloud": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/bisheng": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/bytebot": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/GhostTrack": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/BillionMail": [
+      "08b14aa3-a07a-43b2-8c88-8121b03a418e"
+    ],
+    "Zeeeepa/parlant": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/deepagents": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/xianyu-auto-reply": [
+      "ae147083-aaa6-44c7-8efe-0d05036324c4"
+    ],
+    "Zeeeepa/codegen.py": [
+      "7d6324d8-2cca-4413-b518-b0328edd1b25"
+    ],
+    "Zeeeepa/neuralagent": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/OxyGent": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/opencode": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/ScreenCoder": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/sst": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/opentui": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/Matrix-3D": [
+      "58366db1-a540-4461-895c-cfdbb558c263"
+    ],
+    "Zeeeepa/vipe": [
+      "58366db1-a540-4461-895c-cfdbb558c263"
+    ],
+    "Zeeeepa/joyagent-jdgenie": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/KittenTTS": [
+      "635065c6-9fec-4ea3-ab79-635265c2d1a0"
+    ],
+    "Zeeeepa/harmony": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/Chronos": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/agents": [
+      "7f9f068b-85c0-4a24-87e3-53eab811f6ad"
+    ],
+    "Zeeeepa/monday_mcp": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/open-lovable": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/keychecker": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/terminalcp": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/browser-echo": [
+      "777e96ca-c9f1-45c3-af3e-2112ed7c16b4"
+    ],
+    "Zeeeepa/deep-agents-ui": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/uwu": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/git_manager": [
+      "a1d7da8a-fd11-4941-8753-55c861956e90"
+    ],
+    "Zeeeepa/claude-code-configs": [
+      "7f9f068b-85c0-4a24-87e3-53eab811f6ad"
+    ],
+    "Zeeeepa/mcp-access-point": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/claude-code-studio": [
+      "7f9f068b-85c0-4a24-87e3-53eab811f6ad"
+    ],
+    "Zeeeepa/buttercup": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/pyrust-bt": [
+      "7baa4ea0-75be-4a28-bf7c-feb8a2536fc7"
+    ],
+    "Zeeeepa/dreamv": [
+      "480410cd-a42c-40ff-8d59-132e1081f25a"
+    ],
+    "Zeeeepa/spec-workflow-mcp": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/Github-Mev-Bot": [
+      "7baa4ea0-75be-4a28-bf7c-feb8a2536fc7"
+    ],
+    "Zeeeepa/Download-VSIX-From-Visual-Studio-Market-Place": [
+      "a1d7da8a-fd11-4941-8753-55c861956e90"
+    ],
+    "Zeeeepa/codacy-mcp-server": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/context-engineering-intro": [
+      "7f9f068b-85c0-4a24-87e3-53eab811f6ad"
+    ],
+    "Zeeeepa/jet_python_modules": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5",
+      "9c2f6ef2-ba20-449c-82f4-f60e1b9075a5"
+    ],
+    "Zeeeepa/R-Zero": [
+      "9c2f6ef2-ba20-449c-82f4-f60e1b9075a5"
+    ],
+    "Zeeeepa/resonant-semantic-embedding": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/Windows-Sandbox-Tools": [
+      "a1d7da8a-fd11-4941-8753-55c861956e90"
+    ],
+    "Zeeeepa/Neosgenesis": [
+      "9c2f6ef2-ba20-449c-82f4-f60e1b9075a5"
+    ],
+    "Zeeeepa/augment-code-patcher": [
+      "a1d7da8a-fd11-4941-8753-55c861956e90"
+    ],
+    "Zeeeepa/x-agent": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/remix-saas": [
+      "8b122e3d-c189-48d8-a03e-52579097db6d"
+    ],
+    "Zeeeepa/sourcebot": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/FileScopeMCP": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324",
+      "480410cd-a42c-40ff-8d59-132e1081f25a"
+    ],
+    "Zeeeepa/autogen": [
+      "9c2f6ef2-ba20-449c-82f4-f60e1b9075a5"
+    ],
+    "Zeeeepa/cloud-sniper": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/Resume-Matcher": [
+      "a1d7da8a-fd11-4941-8753-55c861956e90"
+    ],
+    "Zeeeepa/lilypad": [
+      "47efc2f0-51b6-4015-ba10-8ae7c3e66aa4"
+    ],
+    "Zeeeepa/liam": [
+      "66d87c02-30d9-4e10-ac41-bd521a4e067d"
+    ],
+    "Zeeeepa/autogenlib": [
+      "9c2f6ef2-ba20-449c-82f4-f60e1b9075a5"
+    ],
+    "Zeeeepa/garlic": [
+      "58366db1-a540-4461-895c-cfdbb558c263"
+    ],
+    "Zeeeepa/infinity-sql": [
+      "66d87c02-30d9-4e10-ac41-bd521a4e067d"
+    ],
+    "Zeeeepa/cv": [
+      "a1d7da8a-fd11-4941-8753-55c861956e90"
+    ],
+    "Zeeeepa/odoo": [
+      "9c2f6ef2-ba20-449c-82f4-f60e1b9075a5"
+    ],
+    "Zeeeepa/eino": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/reflex": [
+      "8b122e3d-c189-48d8-a03e-52579097db6d"
+    ],
+    "Zeeeepa/agent-x": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/AngryOxide": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/hacker-scripts": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/recce": [
+      "47efc2f0-51b6-4015-ba10-8ae7c3e66aa4"
+    ],
+    "Zeeeepa/Windows": [
+      "a1d7da8a-fd11-4941-8753-55c861956e90"
+    ],
+    "Zeeeepa/AllHackingTools": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/Nettacker": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/cameradar": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/Learn-Web-Hacking": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/Cheatsheet-God": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/reconftw": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/WhatWeb": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/faraday": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/osmedeus": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/PhoneSploit-Pro": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/rengine": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/Scanners-Box": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/PentestGPT": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/Sn1per": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/nishang": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/cve-reference-ingest": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/commando-vm": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/thc-hydra": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/awesome-web-security": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/Awesome-Hacking-Resources": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/x64dbg": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/trivy": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/openwifi": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/prowler": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/spiderfoot": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/RustScan": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/graph-of-thoughts-mcp": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/evolutionary-layering-in-complex-systems-mcp": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/computational-mathematical-discovery-framework": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/textualize-mcp": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/advanced-reasoning-mcp": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/gemini-cli-mcp-server": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/RedTeam-Tools": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/dirsearch": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/awesome-hacking": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/Villain": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/CamPhish": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/hoaxshell": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/mcp-code-indexer": [
+      "2cb69b16-53f9-4023-b71f-9bec6a5a3324"
+    ],
+    "Zeeeepa/lscript": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/langextract": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/theProtector": [
+      "a1d7da8a-fd11-4941-8753-55c861956e90"
+    ],
+    "Zeeeepa/Zero": [
+      "08b14aa3-a07a-43b2-8c88-8121b03a418e"
+    ],
+    "Zeeeepa/executive-ai-assistant": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/plangen": [
+      "9c2f6ef2-ba20-449c-82f4-f60e1b9075a5"
+    ],
+    "Zeeeepa/imagesorcery-mcp": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/fenrir": [
+      "6be7b070-9753-4698-81b4-c636bce4164a"
+    ],
+    "Zeeeepa/agent-os": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/jmap-mcp": [
+      "0dd68e41-b2bc-4b4a-afc5-60b324cb25ae"
+    ],
+    "Zeeeepa/rendergit": [
+      "480410cd-a42c-40ff-8d59-132e1081f25a"
+    ],
+    "Zeeeepa/Crypto-Asset-Tracing-Handbook": [
+      "7baa4ea0-75be-4a28-bf7c-feb8a2536fc7"
+    ],
+    "Zeeeepa/codegen": [
+      "7d6324d8-2cca-4413-b518-b0328edd1b25"
+    ],
+    "Zeeeepa/AugmentCode-Free": [
+      "3081ff24-b6be-40d5-bfd1-e39be26eb408"
+    ],
+    "Zeeeepa/free-augmentcode": [
+      "3081ff24-b6be-40d5-bfd1-e39be26eb408"
+    ],
+    "Zeeeepa/go-cursor-help": [
+      "3081ff24-b6be-40d5-bfd1-e39be26eb408"
+    ],
+    "Zeeeepa/drawnix": [
+      "a1d7da8a-fd11-4941-8753-55c861956e90"
+    ],
+    "Zeeeepa/sim": [
+      "a13bcf96-1dda-4096-bc98-dafaac4027d5"
+    ],
+    "Zeeeepa/TinyGen-prama-yudistara": [
+      "7d6324d8-2cca-4413-b518-b0328edd1b25"
+    ]
+  },
+  "syncSettings": {}
+}

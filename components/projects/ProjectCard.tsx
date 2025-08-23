@@ -13,6 +13,8 @@ import { CheckIcon } from '../shared/icons/CheckIcon';
 import { SyncIcon } from '../shared/icons/SyncIcon';
 import { ExclamationIcon } from '../shared/icons/ExclamationIcon';
 import { InformationCircleIcon } from '../shared/icons/InformationCircleIcon';
+import { CubeIcon } from '../shared/icons/CubeIcon';
+import { ChatIcon } from '../shared/icons/ChatIcon';
 
 interface ProjectCardProps {
   repo: ProjectRepository;
@@ -25,6 +27,12 @@ interface ProjectCardProps {
   isSyncEnabled: boolean;
   onToggleSync: (repoFullName: string, isEnabled: boolean) => void;
   syncNotification?: { status: 'success' | 'error' | 'info'; message: string };
+  commitsBehind?: number;
+  onChat?: (repo: ProjectRepository) => void;
+  onInfo?: (repo: ProjectRepository) => void;
+  isCodegenLinked?: boolean;
+  notificationCount?: number;
+  onClearNotifications?: (repo: ProjectRepository) => void;
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ 
@@ -37,7 +45,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   activeListColor,
   isSyncEnabled,
   onToggleSync,
-  syncNotification
+  syncNotification,
+  commitsBehind,
+  onChat,
+  onInfo,
+  isCodegenLinked
+  , notificationCount
+  , onClearNotifications
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -103,11 +117,26 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 <h3 className="font-semibold text-sm text-accent group-hover:underline truncate" title={repo.full_name}>
                   {repo.name}
                 </h3>
+                {isCodegenLinked && (
+                  <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-accent/15 text-accent border border-accent/30">
+                    <CubeIcon className="w-3 h-3" /> Codegen
+                  </span>
+                )}
+                {isSyncEnabled && (
+                  <span className="inline-flex items-center gap-1 text-[10px] px-1 py-0.5 rounded bg-green-500/15 text-green-400 border border-green-500/30">
+                    <SyncIcon className="w-3 h-3" /> Sync
+                  </span>
+                )}
             </a>
             <div className="relative shrink-0" ref={menuRef}>
-                <button onClick={() => setMenuOpen(!menuOpen)} className="p-1 rounded-full hover:bg-tertiary text-text-secondary hover:text-text-primary" aria-label="Project options">
+                <button onClick={() => { const next = !menuOpen; setMenuOpen(next); if (next && onClearNotifications) onClearNotifications(repo); }} className="p-1 rounded-full hover:bg-tertiary text-text-secondary hover:text-text-primary" aria-label="Project options">
                     <DotsVerticalIcon className="w-5 h-5" />
                 </button>
+                {typeof notificationCount === 'number' && notificationCount > 0 && (
+                  <span className="absolute -top-1 -right-1 inline-flex items-center justify-center h-4 min-w-[16px] px-1 rounded-full bg-danger text-white text-[10px]">
+                    {notificationCount}
+                  </span>
+                )}
                 {menuOpen && (
                     <div className="absolute top-full right-0 mt-2 w-56 bg-tertiary border border-border-color rounded-md shadow-2xl z-20">
                         <div className="p-1 max-h-52 overflow-y-auto">
@@ -200,7 +229,26 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     <span className="ml-1.5">{repo.language}</span>
                 </div>
             )}
+            <div className="flex items-center gap-2 ml-2">
+              <button
+                className="p-1 rounded hover:bg-tertiary text-text-secondary hover:text-text-primary"
+                title="Chat about this project"
+                onClick={(e) => { e.preventDefault(); onChat && onChat(repo); }}
+              >
+                <ChatIcon className="w-4 h-4" />
+              </button>
+              <button
+                className="p-1 rounded hover:bg-tertiary text-text-secondary hover:text-text-primary"
+                title="Analyze project (Info)"
+                onClick={(e) => { e.preventDefault(); onInfo && onInfo(repo); }}
+              >
+                <InformationCircleIcon className="w-4 h-4" />
+              </button>
+            </div>
         </div>
+        {typeof commitsBehind === 'number' && commitsBehind > 0 && (
+          <div className="mt-1.5 text-[11px] text-yellow-400">{commitsBehind} commits behind</div>
+        )}
         {repoLists.length > 0 && (
           <div className="mt-1.5 flex flex-wrap gap-1">
             {repoLists.map(list => (

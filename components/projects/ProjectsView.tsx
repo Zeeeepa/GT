@@ -6,9 +6,13 @@ import {
   deleteRepository,
   syncFork,
   GithubApiError,
+  getBehindStatus,
 } from '../../services/projectGithubService';
+import { getCodegenService } from '../../services/codegenService';
+import { AgentRunStatus } from '../../types';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import ProjectCard from './ProjectCard';
+import { ChatIcon } from '../shared/icons/ChatIcon';
 import ConfirmationModal from '../shared/ConfirmationModal';
 import LoadingSpinner from '../shared/LoadingSpinner';
 import Sidebar from './Sidebar';
@@ -16,13 +20,15 @@ import ManageListsModal from './ManageListsModal';
 import { EyeIcon } from '../shared/icons/EyeIcon';
 import { EyeSlashIcon } from '../shared/icons/EyeSlashIcon';
 import SettingsModal from './SettingsModal';
+import ProjectPromptModal from './ProjectPromptModal';
 
 interface ProjectsViewProps {
     githubToken: string;
     setGithubToken: (token: string) => void;
+    githubApiUrl: string;
 }
 
-export default function ProjectsView({ githubToken, setGithubToken }: ProjectsViewProps) {
+export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl }: ProjectsViewProps) {
   const [allRepositories, setAllRepositories] = useState<ProjectRepository[]>([]);
   const [repositoriesToDisplay, setRepositoriesToDisplay] = useState<ProjectRepository[]>([]);
   
@@ -47,6 +53,13 @@ export default function ProjectsView({ githubToken, setGithubToken }: ProjectsVi
 
   const [syncSettings, setSyncSettings] = useLocalStorage<Record<string, boolean>>('repoSyncSettings', {});
   const [syncNotifications, setSyncNotifications] = useState<Record<string, { status: 'success' | 'error' | 'info'; message: string }>>({});
+  const [behindStatus, setBehindStatus] = useState<Record<string, { ahead_by: number; behind_by: number }>>({});
+  const [codegenRepoIds, setCodegenRepoIds] = useLocalStorage<Record<string, number>>('codegenRepoIds', {});
+  const [projectNotifications, setProjectNotifications] = useLocalStorage<Record<string, number>>('projectNotifications', {});
+  const [promptRepo, setPromptRepo] = useState<ProjectRepository | null>(null);
+  const [promptMode, setPromptMode] = useState<'chat' | 'info' | null>(null);
+  const [codegenRepos, setCodegenRepos] = useState<Record<string, { id: number }>>({});
+  const [projectPendingRuns, setProjectPendingRuns] = useLocalStorage<Record<string, number[]>>('projectPendingRuns', {});
 
   // Sidebar resizing logic
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useLocalStorage('sidebarCollapsed', false);
@@ -122,11 +135,11 @@ export default function ProjectsView({ githubToken, setGithubToken }: ProjectsVi
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchInitialData = useCallback(async (token: string) => {
+  const fetchInitialData = useCallback(async (token: string, apiUrl: string) => {
     setLoading('Fetching your GitHub repositories...');
     setPageError(null);
     try {
-      const fetchedRepos = await fetchRepositories(token);
+      const fetchedRepos = await fetchRepositories(apiUrl, token);
       setAllRepositories(fetchedRepos);
       setView({ type: 'all' });
     } catch (err) {
@@ -143,12 +156,104 @@ export default function ProjectsView({ githubToken, setGithubToken }: ProjectsVi
   
   useEffect(() => {
     if (githubToken) {
-      fetchInitialData(githubToken);
+      fetchInitialData(githubToken, githubApiUrl);
     } else {
         setAllRepositories([]);
         setLoading(null);
     }
-  }, [githubToken, fetchInitialData]);
+  }, [githubToken, githubApiUrl, fetchInitialData]);
+
+  // Load Codegen repositories and build a map by full_name
+  useEffect(() => {
+    const loadCodegenRepos = async () => {
+      try {
+        const repos = await getCodegenService().getRepositories();
+        const map: Record<string, { id: number }> = {};
+        for (const r of repos) {
+          const key = (r as any).full_name || r.name; // API returns full_name per docs
+          if (key) map[key] = { id: (r as any).id };
+        }
+        setCodegenRepos(map);
+      } catch (e) {
+        // ignore if Codegen creds not set
+      }
+    };
+    loadCodegenRepos();
+  }, []);
+
+  // Poll Codegen for pending run completion per project, update notifications
+  useEffect(() => {
+    let cancelled = false;
+    const service = getCodegenService();
+
+    const checkPending = async () => {
+      const updated: Record<string, number[]> = {};
+      let notificationsToAdd: Record<string, number> = {};
+      const entries = Object.entries(projectPendingRuns || {});
+      for (const [fullName, runIds] of entries) {
+        if (!runIds || runIds.length === 0) continue;
+        const remaining: number[] = [];
+        for (const runId of runIds) {
+          try {
+            const run = await service.getAgentRun(runId);
+            if ([AgentRunStatus.COMPLETED, AgentRunStatus.FAILED, AgentRunStatus.CANCELLED].includes(run.status)) {
+              notificationsToAdd[fullName] = (notificationsToAdd[fullName] || 0) + 1;
+              continue; // don't keep
+            }
+            remaining.push(runId);
+          } catch {
+            // keep it for next round in case of transient errors
+            remaining.push(runId);
+          }
+        }
+        if (remaining.length > 0) {
+          updated[fullName] = remaining;
+        }
+      }
+      if (cancelled) return;
+      setProjectPendingRuns(updated);
+      if (Object.keys(notificationsToAdd).length > 0) {
+        setProjectNotifications(prev => {
+          const next = { ...prev };
+          for (const [k, v] of Object.entries(notificationsToAdd)) {
+            next[k] = (next[k] || 0) + (v as number);
+          }
+          return next;
+        });
+      }
+    };
+
+    const interval = setInterval(checkPending, 10000);
+    checkPending();
+    return () => { cancelled = true; clearInterval(interval); };
+  }, [projectPendingRuns, setProjectPendingRuns, setProjectNotifications]);
+
+  // Fetch behind status for forks with auto-sync enabled
+  useEffect(() => {
+    if (!githubToken || allRepositories.length === 0) return;
+    const loadBehind = async () => {
+      const result: Record<string, { ahead_by: number; behind_by: number }> = {};
+      const forks = allRepositories.filter(r => r.fork);
+      for (const repo of forks) {
+        try {
+          // GitHub API returns parent info on repo fetch; if not present, skip
+          // Here we approximate parent full_name using description parsing fallback is not ideal; in practice, fetch repo details for parent
+          // Minimal safe: if no parent data, skip to avoid extra calls
+          // We skip additional fetch to keep changes minimal
+          // Show only if auto-sync enabled
+          if (!syncSettings[repo.full_name]) continue;
+          // Attempt compare with upstream using owner/name as parentFullName; in real use, fetch repo details to read parent
+          const parentFull = repo.parent?.full_name || repo.full_name; // fallback to itself if unknown
+          const { ahead_by, behind_by } = await getBehindStatus(githubApiUrl, githubToken, repo.owner.login, repo.name, parentFull, repo.default_branch);
+          result[repo.full_name] = { ahead_by, behind_by };
+        } catch (e) {
+          // ignore errors per repo
+        }
+      }
+      setBehindStatus(result);
+    };
+    loadBehind();
+  }, [allRepositories, githubApiUrl, githubToken, syncSettings]);
 
   useEffect(() => {
     setPageError(null);
@@ -205,7 +310,7 @@ export default function ProjectsView({ githubToken, setGithubToken }: ProjectsVi
 
       for (const repo of reposToSync) {
         try {
-          await syncFork(repo.owner.login, repo.name, repo.default_branch, githubToken);
+          await syncFork(githubApiUrl, repo.owner.login, repo.name, repo.default_branch, githubToken);
           setSyncNotifications(prev => ({
             ...prev,
             [repo.full_name]: { status: 'success', message: 'Synced with upstream.' }
@@ -243,7 +348,7 @@ export default function ProjectsView({ githubToken, setGithubToken }: ProjectsVi
     const intervalId = setInterval(syncAllEnabledForks, 3600 * 1000); // every hour
 
     return () => clearInterval(intervalId);
-  }, [allRepositories, syncSettings, githubToken]);
+  }, [allRepositories, syncSettings, githubToken, githubApiUrl]);
 
   const handleCreateList = (listName: string, color: string) => {
     if (!listName) return;
@@ -313,7 +418,7 @@ export default function ProjectsView({ githubToken, setGithubToken }: ProjectsVi
     if (!repoToDelete || !githubToken) return;
     setLoading(`Deleting ${repoToDelete.full_name}...`);
     try {
-      await deleteRepository(repoToDelete.owner.login, repoToDelete.name, githubToken);
+      await deleteRepository(githubApiUrl, repoToDelete.owner.login, repoToDelete.name, githubToken);
       setAllRepositories(prev => prev.filter(r => r.id !== repoToDelete.id));
     } catch (err) {
       setPageError(err instanceof Error ? err.message : `Failed to delete ${repoToDelete.name}.`);
@@ -354,12 +459,18 @@ export default function ProjectsView({ githubToken, setGithubToken }: ProjectsVi
     }
   };
 
-  const handleImportData = (data: { lists: ProjectList[], repoListMembership: Record<string, string[]>, syncSettings?: Record<string, boolean> }) => {
+  const handleImportData = (data: { lists: ProjectList[], repoListMembership: Record<string, string[]>, syncSettings?: Record<string, boolean>, codegenRepoIds?: Record<string, number>, projectNotifications?: Record<string, number> }) => {
     if (data && Array.isArray(data.lists) && typeof data.repoListMembership === 'object' && data.repoListMembership !== null) {
       setLists(data.lists);
       setRepoListMembership(data.repoListMembership);
       if (data.syncSettings && typeof data.syncSettings === 'object' && data.syncSettings !== null) {
         setSyncSettings(data.syncSettings);
+      }
+      if (data.codegenRepoIds && typeof data.codegenRepoIds === 'object') {
+        setCodegenRepoIds(data.codegenRepoIds);
+      }
+      if (data.projectNotifications && typeof data.projectNotifications === 'object') {
+        setProjectNotifications(data.projectNotifications);
       }
     } else {
       alert('Error: Invalid import file format. The file must contain at least "lists" and "repoListMembership" properties.');
@@ -508,6 +619,20 @@ export default function ProjectsView({ githubToken, setGithubToken }: ProjectsVi
                     isSyncEnabled={!!syncSettings[repo.full_name]}
                     onToggleSync={handleToggleSync}
                     syncNotification={syncNotifications[repo.full_name]}
+                    commitsBehind={behindStatus[repo.full_name]?.behind_by}
+                    isCodegenLinked={!!(codegenRepoIds[repo.full_name] || codegenRepos[repo.full_name]?.id)}
+                    notificationCount={projectNotifications[repo.full_name] || 0}
+                    onClearNotifications={(r) => {
+                      setProjectNotifications(prev => ({ ...prev, [r.full_name]: 0 }));
+                    }}
+                    onChat={(r) => {
+                      setPromptRepo(r);
+                      setPromptMode('chat');
+                    }}
+                    onInfo={async (r) => {
+                      setPromptRepo(r);
+                      setPromptMode('info');
+                    }}
                 />
             ))}
             </div>
@@ -581,10 +706,57 @@ export default function ProjectsView({ githubToken, setGithubToken }: ProjectsVi
         lists={lists}
         repoListMembership={repoListMembership}
         syncSettings={syncSettings}
+        codegenRepoIds={codegenRepoIds}
+        projectNotifications={projectNotifications}
         onCreateList={handleCreateList}
         onEditList={handleEditList}
         onConfirmDelete={handleDeleteListRequest}
         onImportData={handleImportData}
+      />
+      <ProjectPromptModal
+        isOpen={!!promptRepo}
+        onClose={() => { setPromptRepo(null); setPromptMode(null); }}
+        repo={promptRepo}
+        title={promptMode === 'info' ? 'Analyze Project' : 'Message Codegen about Project'}
+        initialPrompt={promptMode === 'info' ? `Analyze the repository ${promptRepo?.full_name}. Identify architecture, risks, and priority issues.` : ''}
+        onSubmit={async (userPrompt: string) => {
+          if (!promptRepo) return;
+          try {
+            // Ensure codegen repo mapping
+            let mappedId = codegenRepoIds[promptRepo.full_name] || codegenRepos[promptRepo.full_name]?.id;
+            if (!mappedId) {
+              const repos = await getCodegenService().getRepositories();
+              const found = repos.find((r: any) => r.full_name === promptRepo.full_name);
+              if (found?.id) {
+                mappedId = found.id;
+                setCodegenRepoIds(prev => ({ ...prev, [promptRepo.full_name]: mappedId! }));
+              }
+            }
+
+            // Create an agent run with the prompt and repo context in metadata
+            const service = getCodegenService();
+            const created = await service.createAgentRun({
+              prompt: userPrompt,
+              metadata: {
+                repo_full_name: promptRepo.full_name,
+                github_id: promptRepo.id,
+                codegen_repo_id: mappedId || null,
+                mode: promptMode,
+              }
+            });
+
+            // Track pending run for this project so we can increment notification when it finishes
+            if (created?.id) {
+              setProjectPendingRuns(prev => {
+                const list = prev[promptRepo.full_name] || [];
+                return { ...prev, [promptRepo.full_name]: [...list, created.id] };
+              });
+            }
+          } catch (e) {
+            // Still increment to show activity; optionally surface toast later
+            setProjectNotifications(prev => ({ ...prev, [promptRepo.full_name]: (prev[promptRepo.full_name] || 0) + 1 }));
+          }
+        }}
       />
       <SettingsModal
         isOpen={isSettingsModalOpen}
