@@ -10,10 +10,6 @@ export default defineConfig({
     open: true,
     host: '0.0.0.0'
   },
-  define: {
-    // Make environment variables available to the client
-    'import.meta.env.CODEGEN_ORG_ID': JSON.stringify(process.env.CODEGEN_ORG_ID),
-    'import.meta.env.CODEGEN_API_TOKEN': JSON.stringify(process.env.CODEGEN_API_TOKEN),
-    'import.meta.env.GITHUB_TOKEN': JSON.stringify(process.env.GITHUB_TOKEN),
-  }
+  // Vite automatically exposes variables prefixed with VITE_
+  // No need to manually define them
 });
