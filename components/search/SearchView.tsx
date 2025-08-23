@@ -7,12 +7,12 @@ import { searchGithub, searchNpmPackages, getRepoDetails } from '../../services/
 import { SearchParams, SearchResult, SearchProvider, SearchType, NpmPackage, SearchGithubCodeItem, GroupedCodeResult, SearchGithubRepo } from '../../types';
 import LoadingSpinner from '../shared/LoadingSpinner';
 
-interface SearchViewProps {
-    githubToken: string;
-    setGithubToken: (token: string) => void;
-}
+interface SearchViewProps {}
 
-const SearchView: React.FC<SearchViewProps> = ({ githubToken, setGithubToken }) => {
+const SearchView: React.FC<SearchViewProps> = ({}) => {
+    const [githubToken, setGithubToken] = React.useState<string>(() => {
+        return localStorage.getItem('githubToken') || '';
+    });
     const [results, setResults] = useState<(SearchResult | GroupedCodeResult)[]>([]);
     const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);

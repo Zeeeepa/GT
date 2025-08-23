@@ -7,6 +7,7 @@ import { getAPIClient } from '../services/codegenApiService';
 export interface Preferences {
   apiToken: string;
   defaultOrganization?: string;
+  githubToken?: string;
 }
 
 export interface CredentialsValidationResult {
@@ -19,7 +20,24 @@ export interface CredentialsValidationResult {
 export async function getCredentials(): Promise<Preferences> {
     const apiToken = await LocalStorage.getItem<string>("codegenToken") || '';
     const defaultOrganization = await LocalStorage.getItem<string>("codegenOrgId") || undefined;
-    return { apiToken, defaultOrganization };
+    const githubToken = await LocalStorage.getItem<string>("githubToken") || undefined;
+    return { apiToken, defaultOrganization, githubToken };
+}
+
+export async function saveCredentials(credentials: {
+  githubToken?: string;
+  codegenToken: string;
+  organizationId?: number;
+}): Promise<void> {
+  if (credentials.githubToken !== undefined) {
+    await LocalStorage.setItem("githubToken", credentials.githubToken);
+  }
+  
+  await LocalStorage.setItem("codegenToken", credentials.codegenToken);
+  
+  if (credentials.organizationId !== undefined) {
+    await LocalStorage.setItem("codegenOrgId", credentials.organizationId.toString());
+  }
 }
 
 export async function validateCredentials(): Promise<CredentialsValidationResult> {

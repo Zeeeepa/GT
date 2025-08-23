@@ -25,13 +25,11 @@ import SetupCommandsModal from './SetupCommandsModal';
 import SyncManagementModal from './SyncManagementModal';
 import GenerateSetupCommands from './GenerateSetupCommands';
 
-interface ProjectsViewProps {
-    githubToken: string;
-    setGithubToken: (token: string) => void;
-    githubApiUrl: string;
-}
+interface ProjectsViewProps {}
 
-export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl }: ProjectsViewProps) {
+export default function ProjectsView({}: ProjectsViewProps) {
+  const [githubToken, setGithubToken] = useLocalStorage<string>('githubToken', '');
+  const [githubApiUrl] = useLocalStorage<string>('githubApiUrl', 'https://api.github.com');
   const [allRepositories, setAllRepositories] = useState<ProjectRepository[]>([]);
   const [repositoriesToDisplay, setRepositoriesToDisplay] = useState<ProjectRepository[]>([]);
   

@@ -6,13 +6,12 @@ import DashboardView from './components/dashboard/DashboardView';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import ActiveAgentRunsCounter from './components/header/ActiveAgentRunsCounter';
 import NotificationsIcon from './components/header/NotificationsIcon';
+import SettingsIcon from './components/header/SettingsIcon';
 
 type Mode = 'dashboard' | 'projects' | 'search' | 'agents';
 
 const App = () => {
   const [mode, setMode] = useState<Mode>('dashboard');
-  const [githubToken, setGithubToken] = useLocalStorage<string>('githubToken', '');
-  const [githubApiUrl, setGithubApiUrl] = useLocalStorage<string>('githubApiUrl', 'https://api.github.com');
   const [selectedAgentRunId, setSelectedAgentRunId] = useState<number | null>(null);
 
   const handleViewAgentRun = (agentRunId: number) => {
@@ -51,13 +50,14 @@ const App = () => {
           <div className="flex items-center space-x-4">
             <ActiveAgentRunsCounter />
             <NotificationsIcon />
+            <SettingsIcon />
           </div>
         </div>
       </header>
       <div className="flex-1 overflow-hidden">
         {mode === 'dashboard' && <DashboardView onViewAgentRun={handleViewAgentRun} />}
-        {mode === 'projects' && <ProjectsView githubToken={githubToken} setGithubToken={setGithubToken} githubApiUrl={githubApiUrl} />}
-        {mode === 'search' && <SearchView githubToken={githubToken} setGithubToken={setGithubToken} />}
+        {mode === 'projects' && <ProjectsView />}
+        {mode === 'search' && <SearchView />}
         {mode === 'agents' && <AgentsView initialSelectedRunId={selectedAgentRunId} />}
       </div>
     </div>
