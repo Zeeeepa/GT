@@ -4,7 +4,7 @@ import { Plus, Clipboard as ClipboardIcon, Settings } from 'lucide-react';
 import { getAPIClient, resetAPIClient } from '../../../services/codegenApiService';
 import { getAgentRunCache } from '../../../storage/agentRunCache';
 import { validateCredentials, hasCredentials, getCredentials, getDefaultOrganizationId } from '../../../utils/credentials';
-import { Organization, CreateAgentRunRequest } from '../../../types';
+import { Organization, CreateAgentRunRequest, OrganizationResponse } from '../../../types';
 import { getBackgroundMonitoringService } from '../../../utils/backgroundMonitoring';
 import LoadingSpinner from '../../shared/LoadingSpinner';
 

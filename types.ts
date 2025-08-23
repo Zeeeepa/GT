@@ -28,6 +28,12 @@ export interface ProjectList {
   name: string;
   color?: string;
 }
+
+export interface OrganizationResponse {
+  id: number;
+  name: string;
+  slug: string;
+}
   
 export type ProjectView = { type: 'all' } | { type: 'list'; list: ProjectList & { item_count?: number } };
 
