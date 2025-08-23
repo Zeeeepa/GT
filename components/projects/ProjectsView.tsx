@@ -23,6 +23,7 @@ import SettingsModal from './SettingsModal';
 import ProjectPromptModal from './ProjectPromptModal';
 import SetupCommandsModal from './SetupCommandsModal';
 import SyncManagementModal from './SyncManagementModal';
+import GenerateSetupCommands from './GenerateSetupCommands';
 
 interface ProjectsViewProps {
     githubToken: string;
@@ -618,18 +619,12 @@ export default function ProjectsView({ githubToken, setGithubToken, githubApiUrl
     return (
         <>
             <div className="flex justify-end mb-4">
-                <button
-                    onClick={() => {
-                        if (repositoriesToDisplay.length > 0) {
-                            setSelectedRepoForSetup(repositoriesToDisplay[0]);
-                            setIsSetupCommandsModalOpen(true);
-                        }
-                    }}
-                    className="px-4 py-2 bg-accent hover:bg-accent/80 text-white rounded-md flex items-center gap-2"
-                    disabled={repositoriesToDisplay.length === 0}
-                >
-                    <span>Generate Setup Commands</span>
-                </button>
+                {repositoriesToDisplay.length > 0 && (
+                  <GenerateSetupCommands 
+                    projectId={repositoriesToDisplay[0].id} 
+                    organizationId={repositoriesToDisplay[0].owner?.id || 0} 
+                  />
+                )}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
             {repositoriesToDisplay.map(repo => (

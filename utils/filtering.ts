@@ -1,12 +1,12 @@
 import { AgentRun, AgentRunStatus, SortOption } from "../types";
 
 // Define the interfaces that were missing
-interface AgentRunFilters {
+export interface AgentRunFilters {
   status?: AgentRunStatus[];
   searchQuery?: string;
 }
 
-interface SortOptions {
+export interface SortOptions {
   field: string;
   direction: "asc" | "desc";
 }

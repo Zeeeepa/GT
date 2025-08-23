@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import ProjectsView from './components/projects/ProjectsView';
 import SearchView from './components/search/SearchView';
 import AgentsView from './components/agents/AgentsView';
-import DashboardView from './components/dashboard/DashboardView';
+import Dashboard from './components/dashboard/Dashboard';
 import { useLocalStorage } from './hooks/useLocalStorage';
-import ActiveRunsCounter from './components/shared/ActiveRunsCounter';
-import NotificationsIcon from './components/shared/NotificationsIcon';
+import ActiveAgentRunsCounter from './components/header/ActiveAgentRunsCounter';
+import NotificationsIcon from './components/header/NotificationsIcon';
 
 type Mode = 'dashboard' | 'projects' | 'search' | 'agents';
 
@@ -31,13 +31,13 @@ const App = () => {
             <TabButton name="Agents" isActive={mode === 'agents'} onClick={() => setMode('agents')} />
           </nav>
           <div className="flex items-center space-x-4">
-            <ActiveRunsCounter className="text-neon-green" />
+            <ActiveAgentRunsCounter />
             <NotificationsIcon />
           </div>
         </div>
       </header>
       <div className="flex-1 overflow-hidden">
-        {mode === 'dashboard' && <DashboardView onViewAgentRun={handleViewAgentRun} />}
+        {mode === 'dashboard' && <Dashboard projects={[]} />}
         {mode === 'projects' && <ProjectsView githubToken={githubToken} setGithubToken={setGithubToken} githubApiUrl={githubApiUrl} />}
         {mode === 'search' && <SearchView githubToken={githubToken} setGithubToken={setGithubToken} />}
         {mode === 'agents' && <AgentsView initialSelectedRunId={selectedAgentRunId} />}

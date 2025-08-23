@@ -1,5 +1,5 @@
 import { LocalStorage, Cache } from "../utils/storage";
-import { AgentRunResponse, AgentRunStatus, TrackedAgentRun, AgentRunStatusChange } from "../types";
+import { AgentRun, AgentRunStatus, TrackedAgentRun, AgentRunStatusChange } from "../types";
 import { getAPIClient } from "../services/codegenApiService";
 import {
   AgentRunCacheEntry,
@@ -27,7 +27,7 @@ export class AgentRunCache {
     this.loadMetadata();
   }
 
-  async getAgentRuns(organizationId: number): Promise<AgentRunResponse[]> {
+  async getAgentRuns(organizationId: number): Promise<AgentRun[]> {
     const cacheKey = this.getOrgCacheKey(organizationId);
     const cached = await LocalStorage.getItem<string>(cacheKey);
     if (!cached) return [];
@@ -40,7 +40,7 @@ export class AgentRunCache {
     }
   }
 
-  async setAgentRuns(organizationId: number, runs: AgentRunResponse[]): Promise<void> {
+  async setAgentRuns(organizationId: number, runs: AgentRun[]): Promise<void> {
     const cacheKey = this.getOrgCacheKey(organizationId);
     const now = new Date();
     const entries: AgentRunCacheEntry[] = runs.map(run => ({
@@ -52,7 +52,7 @@ export class AgentRunCache {
     await LocalStorage.setItem(cacheKey, JSON.stringify(entries));
   }
 
-  async updateAgentRun(organizationId: number, run: AgentRunResponse): Promise<void> {
+  async updateAgentRun(organizationId: number, run: AgentRun): Promise<void> {
       const runs = await this.getAgentRuns(organizationId);
       const index = runs.findIndex(r => r.id === run.id);
       if (index > -1) {
@@ -84,7 +84,7 @@ export class AgentRunCache {
         cachedRuns.map(run => apiClient.getAgentRun(organizationId, run.id))
       );
       
-      const refreshedRuns: AgentRunResponse[] = [];
+      const refreshedRuns: AgentRun[] = [];
       results.forEach((result, index) => {
         if (result.status === 'fulfilled') {
           refreshedRuns.push(result.value);

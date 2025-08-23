@@ -25,7 +25,7 @@ export function showToast(options: ToastOptions): void {
       toast.error(fullMessage, { duration });
       break;
     case ToastStyle.Warning:
-      toast.warn(fullMessage, { duration });
+      toast(fullMessage, { duration, icon: '⚠️' });
       break;
     default:
       toast(fullMessage, { duration });

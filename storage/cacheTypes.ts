@@ -1,4 +1,4 @@
-import { AgentRunResponse, OrganizationResponse, UserResponse, TrackedAgentRun } from "../types";
+import { AgentRun, OrganizationResponse, UserResponse, TrackedAgentRun } from "../types";
 
 // Cache Keys
 export const CACHE_KEYS = {
@@ -24,7 +24,7 @@ export interface CacheEntry<T> {
   version: string;
 }
 
-export interface AgentRunCacheEntry extends CacheEntry<AgentRunResponse> {
+export interface AgentRunCacheEntry extends CacheEntry<AgentRun> {
   organizationId: number;
 }
 

@@ -280,7 +280,16 @@ export interface AgentRun {
   metadata?: Record<string, any>;
   prompt?: string;
   user_id?: number;
+  steps?: Array<{
+    id: string;
+    name: string;
+    status: 'completed' | 'failed' | 'running' | 'pending';
+    output?: string;
+  }>;
 }
+
+// Type alias for cached agent runs
+export type CachedAgentRun = AgentRun;
 
 export interface AgentRunLog {
   agent_run_id: number;
