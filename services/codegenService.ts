@@ -722,12 +722,11 @@ export class CodegenService {
   // Setup and Analysis
   // ========================================================================
 
-  async generateSetupCommands(data: {
-    repository_id: number;
-    branch?: string;
-  }): Promise<SetupCommand[]> {
+  async generateSetupCommands(repositoryFullName: string): Promise<SetupCommand[]> {
     return this.makeRequest('POST', '/setup-commands/generate', {
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        repository_full_name: repositoryFullName
+      }),
     });
   }
 

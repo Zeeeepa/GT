@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { ProjectRepository, ProjectList } from '../../types';
 import { toRgba } from '../../utils/colorUtils';
@@ -24,8 +23,8 @@ interface ProjectCardProps {
   onAddToList: (repo: ProjectRepository, listId: string) => void;
   onRemoveFromList: (repo: ProjectRepository, listId: string) => void;
   activeListColor?: string;
-  isSyncEnabled: boolean;
-  onToggleSync: (repoFullName: string, isEnabled: boolean) => void;
+  isSyncEnabled?: boolean;
+  onToggleSync?: (repoFullName: string, isEnabled: boolean) => void;
   syncNotification?: { status: 'success' | 'error' | 'info'; message: string };
   commitsBehind?: number;
   onChat?: (repo: ProjectRepository) => void;
@@ -33,6 +32,8 @@ interface ProjectCardProps {
   isCodegenLinked?: boolean;
   notificationCount?: number;
   onClearNotifications?: (repo: ProjectRepository) => void;
+  isPinned?: boolean;
+  onTogglePin?: (repo: ProjectRepository) => void;
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ 
@@ -43,15 +44,17 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   onAddToList, 
   onRemoveFromList, 
   activeListColor,
-  isSyncEnabled,
+  isSyncEnabled = false,
   onToggleSync,
   syncNotification,
   commitsBehind,
   onChat,
   onInfo,
-  isCodegenLinked
-  , notificationCount
-  , onClearNotifications
+  isCodegenLinked,
+  notificationCount,
+  onClearNotifications,
+  isPinned = false,
+  onTogglePin
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -107,7 +110,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       draggable
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
-      className={`bg-secondary border border-border-color rounded-lg p-2.5 flex flex-col justify-between hover:border-accent transition-all duration-300 h-full cursor-grab ${isDragging ? 'opacity-50 scale-95 shadow-2xl ring-2 ring-accent' : 'shadow-lg'}`}
+      className={`bg-secondary border border-border-color rounded-lg p-2.5 flex flex-col justify-between hover:border-accent transition-all duration-300 h-full cursor-grab ${isDragging ? 'opacity-50 scale-95 shadow-2xl ring-2 ring-accent' : 'shadow-lg'} ${isPinned ? 'ring-1 ring-accent' : ''}`}
       style={cardStyle}
     >
       <div>
@@ -125,6 +128,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 {isSyncEnabled && (
                   <span className="inline-flex items-center gap-1 text-[10px] px-1 py-0.5 rounded bg-green-500/15 text-green-400 border border-green-500/30">
                     <SyncIcon className="w-3 h-3" /> Sync
+                  </span>
+                )}
+                {isPinned && (
+                  <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-yellow-500/15 text-yellow-400 border border-yellow-500/30">
+                    <StarIcon className="w-3 h-3" /> Pinned
                   </span>
                 )}
             </a>
@@ -167,7 +175,24 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                                 <p className="px-2 py-1.5 text-xs text-text-secondary">No lists created yet.</p>
                             )}
                         </div>
-                        {repo.fork && (
+                        {onTogglePin && (
+                          <>
+                            <div className="border-t border-border-color my-1"></div>
+                            <div className="p-1">
+                              <button
+                                onClick={() => {
+                                  onTogglePin(repo);
+                                  setMenuOpen(false);
+                                }}
+                                className="w-full text-left flex items-center px-2 py-1.5 text-sm text-text-primary rounded-md hover:bg-accent/20"
+                              >
+                                <StarIcon className="w-4 h-4 mr-2 text-yellow-400" />
+                                {isPinned ? 'Unpin from Dashboard' : 'Pin to Dashboard'}
+                              </button>
+                            </div>
+                          </>
+                        )}
+                        {repo.fork && onToggleSync && (
                           <>
                             <div className="border-t border-border-color my-1"></div>
                             <div className="p-1">
@@ -282,3 +307,4 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 };
 
 export default ProjectCard;
+
