@@ -1,4 +1,3 @@
-
 // --- Project Catalog Types ---
 
 export interface ProjectRepository {
@@ -245,6 +244,20 @@ export interface Repository {
   updated_at?: string;
 }
 
+export interface CodegenRepository {
+  id: number;
+  name: string;
+  full_name: string;
+  private: boolean;
+  url: string;
+  owner: string;
+  description?: string;
+  language?: string;
+  stars?: number;
+  forks?: number;
+  updated_at?: string;
+}
+
 export interface GithubPullRequest {
   id: number;
   title: string;
@@ -334,6 +347,7 @@ export interface CreateAgentRunRequest {
   prompt: string;
   images?: string[];
   metadata?: Record<string, any>;
+  repo_id?: number;
 }
 
 export interface ResumeAgentRunRequest {
